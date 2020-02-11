@@ -20,26 +20,24 @@
     var CONFIG = {"hostname":"binlongzhang.github.io","root":"/","scheme":"Gemini","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="k近邻算法： 给定的一个训练数据集，对新的输入实例，在训练数据集中找到与该实例最的k个实例，这k个实例的多数属于某个类，就将该实例划分进入这个类中；(哲学上讲的话，有点近朱者赤近墨者黑的味道~~)  算法核心原理">
+  <meta name="description" content="引言 支持向量机（support vector machines,SVM）是一种二分类模型；它的基本模型定义在特征空间上的间隔最大模型分类器，间隔最大使之区别于感知机；同时还可以使用核技巧，使它成为非线性支持向量机；SVM的学习策略就是间隔最大化，等价于正则化的合页函数最小化；支持向量机的学习算法就是求解凸二次规划的最优化算法；">
 <meta property="og:type" content="article">
-<meta property="og:title" content="k近邻法">
-<meta property="og:url" content="https://binlongzhang.github.io/2020/02/09/k%E8%BF%91%E9%82%BB%E6%B3%95/index.html">
+<meta property="og:title" content="支持向量机">
+<meta property="og:url" content="https://binlongzhang.github.io/2020/02/10/%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA/index.html">
 <meta property="og:site_name" content="Binlong Zhang">
-<meta property="og:description" content="k近邻算法： 给定的一个训练数据集，对新的输入实例，在训练数据集中找到与该实例最的k个实例，这k个实例的多数属于某个类，就将该实例划分进入这个类中；(哲学上讲的话，有点近朱者赤近墨者黑的味道~~)  算法核心原理">
+<meta property="og:description" content="引言 支持向量机（support vector machines,SVM）是一种二分类模型；它的基本模型定义在特征空间上的间隔最大模型分类器，间隔最大使之区别于感知机；同时还可以使用核技巧，使它成为非线性支持向量机；SVM的学习策略就是间隔最大化，等价于正则化的合页函数最小化；支持向量机的学习算法就是求解凸二次规划的最优化算法；">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://binlongzhang.github.io/2020/02/09/k%E8%BF%91%E9%82%BB%E6%B3%95/Lp%E8%B7%9D%E7%A6%BB%E9%97%B4%E7%9A%84%E5%85%B3%E7%B3%BB.png">
-<meta property="og:image" content="https://binlongzhang.github.io/2020/02/09/k%E8%BF%91%E9%82%BB%E6%B3%95/kd%E6%A0%91%E7%A4%BA%E4%BE%8B.png">
-<meta property="og:image" content="https://binlongzhang.github.io/2020/02/09/k%E8%BF%91%E9%82%BB%E6%B3%95/kd%E6%A0%91%E6%90%9C%E7%B4%A2.png">
-<meta property="article:published_time" content="2020-02-09T14:32:11.376Z">
-<meta property="article:modified_time" content="2020-02-10T05:11:45.170Z">
+<meta property="og:image" content="https://binlongzhang.github.io/2020/02/10/%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA/%E5%87%A0%E4%BD%95%E9%97%B4%E9%9A%94.png">
+<meta property="article:published_time" content="2020-02-10T11:17:28.000Z">
+<meta property="article:modified_time" content="2020-02-10T14:50:28.253Z">
 <meta property="article:author" content="Binlong Zhang">
 <meta property="article:tag" content="概率论">
 <meta property="article:tag" content="机器学习">
 <meta property="article:tag" content="统计学习">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://binlongzhang.github.io/2020/02/09/k%E8%BF%91%E9%82%BB%E6%B3%95/Lp%E8%B7%9D%E7%A6%BB%E9%97%B4%E7%9A%84%E5%85%B3%E7%B3%BB.png">
+<meta name="twitter:image" content="https://binlongzhang.github.io/2020/02/10/%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA/%E5%87%A0%E4%BD%95%E9%97%B4%E9%9A%94.png">
 
-<link rel="canonical" href="https://binlongzhang.github.io/2020/02/09/k%E8%BF%91%E9%82%BB%E6%B3%95/">
+<link rel="canonical" href="https://binlongzhang.github.io/2020/02/10/%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA/">
 
 
 <script id="page-configurations">
@@ -51,7 +49,7 @@
   };
 </script>
 
-  <title>k近邻法 | Binlong Zhang</title>
+  <title>支持向量机 | Binlong Zhang</title>
   
 
 
@@ -165,7 +163,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://binlongzhang.github.io/2020/02/09/k%E8%BF%91%E9%82%BB%E6%B3%95/">
+    <link itemprop="mainEntityOfPage" href="https://binlongzhang.github.io/2020/02/10/%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -178,7 +176,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          k近邻法
+          支持向量机
         </h1>
 
         <div class="post-meta">
@@ -187,16 +185,10 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2020-02-09 22:32:11" itemprop="dateCreated datePublished" datetime="2020-02-09T22:32:11+08:00">2020-02-09</time>
+              <time title="创建时间：2020-02-10 19:17:28 / 修改时间：22:50:28" itemprop="dateCreated datePublished" datetime="2020-02-10T19:17:28+08:00">2020-02-10</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-02-10 13:11:45" itemprop="dateModified" datetime="2020-02-10T13:11:45+08:00">2020-02-10</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -228,7 +220,7 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>2.1k</span>
+              <span>1.5k</span>
             </span>
 
         </div>
@@ -240,78 +232,50 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <blockquote>
-<p>k近邻算法：</p>
-<p>给定的一个训练数据集，对新的输入实例，在训练数据集中找到与该实例最的k个实例，这k个实例的多数属于某个类，就将该实例划分进入这个类中；(哲学上讲的话，有点近朱者赤近墨者黑的味道~~)</p>
+        <h1 id="引言">引言</h1>
+<p>支持向量机（support vector machines,SVM）是一种二分类模型；它的基本模型定义在特征空间上的间隔最大模型分类器，间隔最大使之区别于感知机；同时还可以使用核技巧，使它成为非线性支持向量机；SVM的学习策略就是间隔最大化，等价于正则化的合页函数最小化；支持向量机的学习算法就是求解凸二次规划的最优化算法；</p>
+<p>由简至繁的模型分别为</p>
+<ul>
+<li>线性可分支持向量机--硬间隔最大化</li>
+<li>线性支持向量机--软间隔最大化</li>
+<li>非线性支持向量机--核技巧+软间隔最大化</li>
+</ul>
+<h1 id="线性可分支持向量机">线性可分支持向量机</h1>
+<p>线性可分支持向量机、线性支持向量机假设输入空间和特征空间的元素一一对应，并将输入空间中的输入映射为特征空间中的特征向量；支持向量机的学习实在特征空间内进行的；</p>
+<p>假设训练数据集是线性可分的，且对于样本点<span class="math inline">\((x_i,y_i)\)</span>,当<span class="math inline">\(y_i=+1\)</span>时<span class="math inline">\(x_i\)</span>为正例；当<span class="math inline">\(y_i=-1\)</span>时<span class="math inline">\(x_i\)</span>为负例；</p>
+<p>学习的目标是找到分离超平面<span class="math inline">\(w\cdot x+b=0,\quad w\)</span>是法向量，<span class="math inline">\(b\)</span>为截距，法向量指向的是正类；一般的，训练数据集线性可分时存在无穷多个分离超平面将两类数据正确划分。感知机利用误分类最小策略，求得分离超平面；线性可分支持向量机利用间隔最大化求最优分离超平面；</p>
+<p><strong>定义</strong>：（线性可分支持向量机）给定线性可分数据集，通过间隔最大化或等价的求解相应的凸二次规划问题学习得到的分离超平面为 <span class="math display">\[
+w^*\cdot x+b^*=0
+\]</span> 相应的决策函数为 <span class="math display">\[
+f(x)=sign(w^*\cdot x+b^*)
+\]</span></p>
+<h2 id="函数间隔和几何间隔">函数间隔和几何间隔</h2>
+<p><strong>定义</strong>：</p>
+<blockquote>
+<p>(函数间隔)给定训练数据集<span class="math inline">\(T\)</span>和超平面<span class="math inline">\((w,b)\)</span>,关于样本点<span class="math inline">\((x_i,y_i)\)</span>的函数间隔为 <span class="math display">\[
+\hat\gamma_i=y_i(w\cdot x_i+b)
+\]</span> 定义超平面<span class="math inline">\((w,b)\)</span>关于训练数据集<span class="math inline">\(T\)</span>的函数间隔为超平面<span class="math inline">\((w,b)\)</span>关于<span class="math inline">\(T\)</span>中所有样本点<span class="math inline">\((x_i,y_i)\)</span>的函数间隔最小值， <span class="math display">\[
+\hat \gamma= \min_{i=1,\cdots,N}\hat \gamma_i
+\]</span></p>
 </blockquote>
-<h2 id="算法核心原理">算法核心原理</h2>
-<ul>
-<li><p>根据给定的<strong>距离度量</strong>，在训练数据集<em>T</em>中找出与<em>x</em>最近邻的<em>k</em>个点，涵盖这<em>k</em>个点的邻域记为</p>
-<p><span class="math inline">\(N_{k}(x)\)</span>;</p></li>
-<li><p>在<span class="math inline">\(N_{k}(x)\)</span>中根据<strong>分类决策规则</strong>决定<span class="math inline">\(x\)</span>的类别<span class="math inline">\(Y\)</span>; <span class="math display">\[
-Y= arg\max \sum_{x_i\in N_{k}(x)}I(y_{i}=c_{j}),i=1,2 \ldots,N;j=1,2 \ldots,K;\\其中I为指示函数；即y_i=c_j时I为1，否则为I为0；
-\]</span> <strong><em>k近邻没有显示的学习过程</em></strong></p></li>
-</ul>
-<h2 id="k近邻模型">k近邻模型</h2>
-<p>k近邻算法使用的模型实际上 对应于特征空间的划分；模型有三个基本要</p>
-<ul>
-<li>度量距离</li>
-<li>k值的选择</li>
-<li>分类决策的规则</li>
-</ul>
-<h3 id="距离度量">距离度量</h3>
-<p>将设特征空间<span class="math inline">\(X\)</span>是<span class="math inline">\(n\)</span>维实数向量空间<span class="math inline">\(R^n\)</span>,<span class="math inline">\(x_i,x_j\in X,x_i=(x_i^{(1)},x_i^{(2)},\cdots,x_i^{(n)})^T,x_j=(x_j^{(1)},x_j^{(2)},\cdots,x_j^{(n)})^T,x_i,x_j的L_p距离定义为\)</span> <span class="math display">\[
-L_p(x_I,x_j)=(\sum^n_{l=1}|x_i^{(l)}-x_j^{(l)}|)^{\frac1p}
-\]</span> 其中<span class="math inline">\(P\geq 1\)</span></p>
-<ul>
-<li><span class="math inline">\(p=1\)</span>称为曼哈顿距离</li>
-<li><span class="math inline">\(p=2\)</span>称为欧氏距离</li>
-<li><span class="math inline">\(p=\infty\)</span>时，他是各个坐标距离的最大值</li>
-</ul>
-<p>如图</p>
-<p><img src="/2020/02/09/k%E8%BF%91%E9%82%BB%E6%B3%95/Lp距离间的关系.png"></p>
-<h3 id="k值的选择">k值的选择</h3>
-<ul>
-<li><p>k值小，预测结果对近邻实例点非常敏感，而且k值减小模型就会变得复杂而且容易发生过拟合；</p></li>
-<li><p>k值大，学习的近似误差会增大，也就意味这模型会变得简单；</p>
-<p><strong>通常采用交叉验证发来选取最优k值</strong></p></li>
-</ul>
-<h3 id="分类决策规则">分类决策规则</h3>
-<p>k近邻法的分类决策规则往往是多数表决；</p>
-<p>如果分类损失函数为0-1损失函数，分类函数为 <span class="math display">\[
-f:R^n \to \{c_1,c_2,\cdots,c_k\}
-\]</span> 那么误分类的概率 <span class="math display">\[
-P(Y\neq f(X)) = 1-P(Y=f(X))
-\]</span> 对于给定的实例<span class="math inline">\(x\in X\)</span>,其最近邻的<span class="math inline">\(k\)</span>个训练实例点构成的集合<span class="math inline">\(N_k(x)\)</span>,如果覆盖<span class="math inline">\(N_k(x)\)</span>的区域类别为<span class="math inline">\(c_j\)</span>,那么误分类 <span class="math display">\[
-\frac1k\sum_{x_i\in N_k(x)} = 1-\frac1k\sum_{x_i\in N_k(x)}I(y_i=c_j)
-\]</span> 使得误分类概率最小就是经验风险最小，也就是<span class="math inline">\(\frac1k\sum_{x_i\in N_k(x)}I(y_i=c_j)\)</span>最大；也就是说多数表决规则等价于经验风险最小化；</p>
-<h2 id="k近邻算法实现kd树">K近邻算法实现：kd树</h2>
-<p>由于实现k近邻算法要对已划分数据进行搜算，数据量大时会耗费大量时间，因此有很多优化提高效率的算法；dk树就是其中的一种</p>
-<h3 id="构造kd树">构造kd树</h3>
-<ol type="1">
-<li>构造根节点，根节点对应于包含<span class="math inline">\(T\)</span>的k维空间的超矩形区域；</li>
-<li>选择<span class="math inline">\(x^{(1)}\)</span>为坐标轴，以<span class="math inline">\(T\)</span>中所有实例的<span class="math inline">\(x^{(1)}\)</span>坐标的中位数为切分点，将根节点对应的超矩形区域切分为两个子区域；切分由通过切分点并与坐标轴<span class="math inline">\(x^{(1)}\)</span>垂直的超平面实现；左子节点存放对应坐标小于切分点的点、右边存放大于切分点的，根节点保存出与切分平面上的点；</li>
-<li>重复：对于深度为j的节点，选择<span class="math inline">\(x^{(l)}\)</span>为切分的坐标轴，<span class="math inline">\(l=j(mod\,k)+1\)</span>,以该节点的区域中所有实例的<span class="math inline">\(x^{(l)}\)</span>坐标的中位数为切分点，再次进行与（2）中类似的划分；</li>
-<li>直到两个子区域没有实例存在时停止，从而形成<span class="math inline">\(kd\)</span>树的区域划分；</li>
-</ol>
-<p>图示如下</p>
-<p><img src="/2020/02/09/k%E8%BF%91%E9%82%BB%E6%B3%95/kd树示例.png"></p>
-<h3 id="搜索kd树">搜索kd树</h3>
-<p>包含目标点的叶节点对应的包含目标点的最小超矩形区域。以此叶节点的实例点作为当前最近点。目标点的最邻近点一定在以目标点为中心并通过当前最近点的超群体内部。然后返回当前节点的父节点，如果父节点的另一子节点的超矩形区域与超球体相交，那么在相交区域内寻找与目标结点最近的点。如果存在，将此作为新的最近点。算法转到更上一级父节点继续上述过程；如果父节点另一子节点的超矩形区域与超球体不相交，或不存在比当前最近点更近点则停止操作；</p>
-<ol type="1">
-<li>在kd树中找出包含目标点x的叶节点：从根节点出发递归的向下方位，直到子节点为叶节点为止；</li>
-<li>以此叶节点为“当前最近点”；</li>
-<li>递归的向上回退，在每个节点执行下述操作
-<ul>
-<li>如果该节点保存的实例点比当前最近点距离目标更近，则该实例点为“当前最近点”；</li>
-<li>当前最近点一定位于该节点一个子节点对应的区域，检查该子节点的父节点的另一个子节点对应的区域是否有更近的点，有则确认零一点为最近点----具体可检查另一子节点对应区域是否以目标点为球心、以当前最小距离为半径的超球体相交；</li>
-<li>不相交则向上回退；</li>
-</ul></li>
-<li>回退到根节点，搜索结束；</li>
-</ol>
-<p>图示如下</p>
-<p><img src="/2020/02/09/k%E8%BF%91%E9%82%BB%E6%B3%95/kd树搜索.png"></p>
-<p><strong><span class="math inline">\(kd\)</span>树搜索平均计算复杂度是<span class="math inline">\(O(log\,N)\)</span>,<span class="math inline">\(N\)</span>为训练实例数。kd树适合用于训练实例数远大于空间维数时的k紧邻搜索。二者接近时，<span class="math inline">\(kd\)</span>树效率会迅速下降，几乎线性扫描；</strong></p>
+<p>函数间隔可以表示分类预测的正确性及确信度，但是选择分离超平面时，只有函数间隔是不够的；如果成比例改变w和b，超平面没有改变但是间隔却变为原来的两倍；</p>
+<p>因此我们可以对分离超平面的法向量加某些约束，如规范化，<span class="math inline">\(||w||=1\)</span>,使得间隔是确定的，这时函数间隔为几何间隔 <span class="math display">\[
+\gamma_i=\frac w{||w||}\cdot x_i+\frac b{||w||}
+\]</span> <img src="/2020/02/10/%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA/几何间隔.png"></p>
+<p>定义</p>
+<blockquote>
+<p>（几何间隔）对于给定的训练数据集<span class="math inline">\(T\)</span>和超平面<span class="math inline">\((w,b)\)</span>,定义超平面<span class="math inline">\((w,b)\)</span>关于样本点<span class="math inline">\((x_i,y_i)\)</span>的几何间隔为 <span class="math display">\[
+\gamma_i=y_i(\frac w{||w||}\cdot x_i+\frac b{||w||})
+\]</span> 定义超平面<span class="math inline">\((w,b)\)</span>关于训练数据集<span class="math inline">\(T\)</span>的函数间隔为超平面<span class="math inline">\((w,b)\)</span>关于<span class="math inline">\(T\)</span>中所有样本点<span class="math inline">\((x_i,y_i)\)</span>的函数间隔最小值， <span class="math display">\[
+\gamma= \min_{i=1,\cdots,N} \gamma_i
+\]</span></p>
+</blockquote>
+<p>超平面<span class="math inline">\((w,b)\)</span>关于样本点<span class="math inline">\((x_i,y_i)\)</span>的几何间隔一般是实例点到朝平面的带符号距离，正确分类时就是实例点到超平面的距离；</p>
+<p>函数间隔和几何间隔有如下关系 <span class="math display">\[
+\gamma_i=\frac{\hat \gamma_i}{||w||}\\
+\gamma=\frac{\hat \gamma}{||w||}
+\]</span> 如果<span class="math inline">\(||w||=1\)</span>,那么函数间隔和几何间隔相等；</p>
+<h2 id="间隔最大化">间隔最大化</h2>
 
     </div>
 
@@ -366,13 +330,10 @@ P(Y\neq f(X)) = 1-P(Y=f(X))
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/02/09/%E5%86%B3%E7%AD%96%E6%A0%91/" rel="prev" title="决策树">
-      <i class="fa fa-chevron-left"></i> 决策树
+    <a href="/2020/02/09/logistic%E5%9B%9E%E5%BD%92%E5%92%8C%E6%9C%80%E5%A4%A7%E7%86%B5%E6%A8%A1%E5%9E%8B/" rel="prev" title="logistic回归和最大熵模型">
+      <i class="fa fa-chevron-left"></i> logistic回归和最大熵模型
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/02/09/logistic%E5%9B%9E%E5%BD%92%E5%92%8C%E6%9C%80%E5%A4%A7%E7%86%B5%E6%A8%A1%E5%9E%8B/" rel="next" title="logistic回归和最大熵模型">
-      logistic回归和最大熵模型 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -432,7 +393,7 @@ P(Y\neq f(X)) = 1-P(Y=f(X))
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#算法核心原理"><span class="nav-number">1.</span> <span class="nav-text">算法核心原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#k近邻模型"><span class="nav-number">2.</span> <span class="nav-text">k近邻模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#距离度量"><span class="nav-number">2.1.</span> <span class="nav-text">距离度量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#k值的选择"><span class="nav-number">2.2.</span> <span class="nav-text">k值的选择</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分类决策规则"><span class="nav-number">2.3.</span> <span class="nav-text">分类决策规则</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#k近邻算法实现kd树"><span class="nav-number">3.</span> <span class="nav-text">K近邻算法实现：kd树</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#构造kd树"><span class="nav-number">3.1.</span> <span class="nav-text">构造kd树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#搜索kd树"><span class="nav-number">3.2.</span> <span class="nav-text">搜索kd树</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#线性可分支持向量机"><span class="nav-number">2.</span> <span class="nav-text">线性可分支持向量机</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#函数间隔和几何间隔"><span class="nav-number">2.1.</span> <span class="nav-text">函数间隔和几何间隔</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#间隔最大化"><span class="nav-number">2.2.</span> <span class="nav-text">间隔最大化</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 

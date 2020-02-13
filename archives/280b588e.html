@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 4.2.0">
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.ico">
+  <link rel="mask-icon" href="/images/logo.png" color="#222">
 
 <link rel="stylesheet" href="/css/main.css">
 
@@ -17,28 +17,27 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"binlongzhang.github.io","root":"/","scheme":"Gemini","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"binlongzhang.github.io","root":"/","scheme":"Gemini","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="数学基础 先验概率： 根据以往的经验分析得到的概率；">
+  <meta name="description" content="引言 支持向量机（support vector machines,SVM）是一种二分类模型；它的基本模型定义在特征空间上的间隔最大模型分类器，间隔最大使之区别于感知机；同时还可以使用核技巧，使它成为非线性支持向量机；SVM的学习策略就是间隔最大化，等价于正则化的合页函数最小化；支持向量机的学习算法就是求解凸二次规划的最优化算法；">
 <meta property="og:type" content="article">
-<meta property="og:title" content="朴素贝叶斯">
-<meta property="og:url" content="https://binlongzhang.github.io/2020/02/09/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF/index.html">
-<meta property="og:site_name" content="Binlong Zhang">
-<meta property="og:description" content="数学基础 先验概率： 根据以往的经验分析得到的概率；">
+<meta property="og:title" content="支持向量机">
+<meta property="og:url" content="https://binlongzhang.github.io/archives/280b588e.html">
+<meta property="og:site_name" content="Gonlnib&#39;s Blog">
+<meta property="og:description" content="引言 支持向量机（support vector machines,SVM）是一种二分类模型；它的基本模型定义在特征空间上的间隔最大模型分类器，间隔最大使之区别于感知机；同时还可以使用核技巧，使它成为非线性支持向量机；SVM的学习策略就是间隔最大化，等价于正则化的合页函数最小化；支持向量机的学习算法就是求解凸二次规划的最优化算法；">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://binlongzhang.github.io/2020/02/09/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF/%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%85%AC%E5%BC%8F.png">
-<meta property="og:image" content="https://binlongzhang.github.io/2020/02/09/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF/%E5%90%8E%E9%AA%8C%E6%A6%82%E7%8E%87%E6%9C%80%E5%A4%A7%E5%8C%96%E5%90%AB%E4%B9%89.png">
-<meta property="article:published_time" content="2020-02-09T14:25:11.490Z">
-<meta property="article:modified_time" content="2020-02-10T05:11:24.092Z">
-<meta property="article:author" content="Binlong Zhang">
+<meta property="og:image" content="https://binlongzhang.github.io/archives/%E5%87%A0%E4%BD%95%E9%97%B4%E9%9A%94.png">
+<meta property="article:published_time" content="2020-02-10T11:17:28.000Z">
+<meta property="article:modified_time" content="2020-02-13T02:50:38.266Z">
+<meta property="article:author" content="Gonlnib">
 <meta property="article:tag" content="概率论">
 <meta property="article:tag" content="机器学习">
 <meta property="article:tag" content="统计学习">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://binlongzhang.github.io/2020/02/09/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF/%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%85%AC%E5%BC%8F.png">
+<meta name="twitter:image" content="https://binlongzhang.github.io/archives/%E5%87%A0%E4%BD%95%E9%97%B4%E9%9A%94.png">
 
-<link rel="canonical" href="https://binlongzhang.github.io/2020/02/09/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF/">
+<link rel="canonical" href="https://binlongzhang.github.io/archives/280b588e.html">
 
 
 <script id="page-configurations">
@@ -50,7 +49,7 @@
   };
 </script>
 
-  <title>朴素贝叶斯 | Binlong Zhang</title>
+  <title>支持向量机 | Gonlnib's Blog</title>
   
 
 
@@ -94,7 +93,7 @@
     <div>
       <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
-        <span class="site-title">Binlong Zhang</span>
+        <span class="site-title">Gonlnib's Blog</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
@@ -125,22 +124,47 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">3</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">2</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">5</span></a>
 
   </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
   </ul>
 
 </nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
 </div>
     </header>
 
@@ -164,37 +188,39 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://binlongzhang.github.io/2020/02/09/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF/">
+    <link itemprop="mainEntityOfPage" href="https://binlongzhang.github.io/archives/280b588e.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Binlong Zhang">
-      <meta itemprop="description" content="Binlong Zhang 的个人博客，主要会涉及一些学习记录、思考、理解，也会有一些个人爱好的展示">
+      <meta itemprop="image" content="/images/logo.png">
+      <meta itemprop="name" content="Gonlnib">
+      <meta itemprop="description" content="Gonlnib 的个人博客，主要内容会涉及一些学习记录、思考、理解，也会有一些个人爱好的展示">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Binlong Zhang">
+      <meta itemprop="name" content="Gonlnib's Blog">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          朴素贝叶斯
+          支持向量机
         </h1>
 
         <div class="post-meta">
+
+          
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2020-02-09 22:25:11" itemprop="dateCreated datePublished" datetime="2020-02-09T22:25:11+08:00">2020-02-09</time>
+              <time title="创建时间：2020-02-10 19:17:28" itemprop="dateCreated datePublished" datetime="2020-02-10T19:17:28+08:00">2020-02-10</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-02-10 13:11:24" itemprop="dateModified" datetime="2020-02-10T13:11:24+08:00">2020-02-10</time>
+                <time title="修改时间：2020-02-13 10:50:38" itemprop="dateModified" datetime="2020-02-13T10:50:38+08:00">2020-02-13</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -215,6 +241,7 @@
             </span>
 
           
+          <br>
             <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
@@ -227,7 +254,7 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1.6k</span>
+              <span>1.5k</span>
             </span>
 
         </div>
@@ -239,55 +266,51 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="数学基础">数学基础</h2>
-<p>先验概率： 根据以往的经验分析得到的概率；</p>
-<p>后验概率：根据结果推导原因；</p>
-<p>贝叶斯公式：</p>
-<p><img src="/2020/02/09/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF/贝叶斯公式.png"></p>
-<h2 id="核心原理">核心原理</h2>
-<p>朴素贝叶斯法通过训练数据集学习联合概率分布<span class="math inline">\(P(X,Y)\)</span>，具体的学习先验概率分布 <span class="math display">\[
-P(Y=c_k),k=1,2,\cdots,K
-\]</span> 条件概率分布 <span class="math display">\[
-P(X=x|Y=c_k)=P(X^{(1)}=x^{(1)},\cdots,X^{(n)}=x^{(n)}|Y=c_k),k=1,2,\cdots,K
-\]</span> 于是学习到联合概率分布<span class="math inline">\(P(X,Y)\)</span></p>
-<p>实际上，朴素贝叶斯对条件概率分布做了<strong>条件独立性的假设</strong>，这一假设使得朴素贝叶斯发相对简单；但也会<strong>牺牲一定的分类准确率</strong>；</p>
-<hr>
-<p>朴素贝叶斯法分类时，对于给定的输入x，通过学习到的模型计算后验概率分布，将后验概率最大的类作为x的输出类。具体的朴素贝叶斯分类器可以表示为 <span class="math display">\[
-y=f(x)=arg\max\limits_{c_k} \frac{P(Y=c_k)\prod\limits_jP(X^{(j)}=x^{(j)}|Y=c_k)}{\sum_kP(Y=c_k)\prod\limits_jP(X^{(j)}=x^{(j)}|Y=c_k)}
-\]</span> 由于上式中所有分母都是相同的，因此上式等价于 <span class="math display">\[
-y=arg\max \limits_{c_k} P(Y=c_k)\prod\limits_jP(X^{(j)}=x^{(j)}|Y=c_k)
+        <h1 id="引言">引言</h1>
+<p>支持向量机（support vector machines,SVM）是一种二分类模型；它的基本模型定义在特征空间上的间隔最大模型分类器，间隔最大使之区别于感知机；同时还可以使用核技巧，使它成为非线性支持向量机；SVM的学习策略就是间隔最大化，等价于正则化的合页函数最小化；支持向量机的学习算法就是求解凸二次规划的最优化算法；</p>
+<p>由简至繁的模型分别为</p>
+<ul>
+<li>线性可分支持向量机--硬间隔最大化</li>
+<li>线性支持向量机--软间隔最大化</li>
+<li>非线性支持向量机--核技巧+软间隔最大化</li>
+</ul>
+<h1 id="线性可分支持向量机">线性可分支持向量机</h1>
+<p>线性可分支持向量机、线性支持向量机假设输入空间和特征空间的元素一一对应，并将输入空间中的输入映射为特征空间中的特征向量；支持向量机的学习实在特征空间内进行的；</p>
+<p>假设训练数据集是线性可分的，且对于样本点<span class="math inline">\((x_i,y_i)\)</span>,当<span class="math inline">\(y_i=+1\)</span>时<span class="math inline">\(x_i\)</span>为正例；当<span class="math inline">\(y_i=-1\)</span>时<span class="math inline">\(x_i\)</span>为负例；</p>
+<p>学习的目标是找到分离超平面<span class="math inline">\(w\cdot x+b=0,\quad w\)</span>是法向量，<span class="math inline">\(b\)</span>为截距，法向量指向的是正类；一般的，训练数据集线性可分时存在无穷多个分离超平面将两类数据正确划分。感知机利用误分类最小策略，求得分离超平面；线性可分支持向量机利用间隔最大化求最优分离超平面；</p>
+<p><strong>定义</strong>：（线性可分支持向量机）给定线性可分数据集，通过间隔最大化或等价的求解相应的凸二次规划问题学习得到的分离超平面为 <span class="math display">\[
+w^*\cdot x+b^*=0
+\]</span> 相应的决策函数为 <span class="math display">\[
+f(x)=sign(w^*\cdot x+b^*)
 \]</span></p>
-<hr>
-<p><strong>后验概率最大化等价于经验风险最小化</strong>（后验概率最大化的含义）</p>
-<p><img src="/2020/02/09/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF/后验概率最大化含义.png"></p>
-<h2 id="朴素贝叶斯的参数估计">朴素贝叶斯的参数估计</h2>
-<h3 id="极大似然估计">极大似然估计</h3>
-<ol type="1">
-<li><p>计算先验概率及条件概率 <span class="math display">\[
-P(Y=c_k)=\frac{\sum\limits_{i=1}^NI(y_i=c_k)}{N},k=1,2,\cdots,K
+<h2 id="函数间隔和几何间隔">函数间隔和几何间隔</h2>
+<p><strong>定义</strong>：</p>
+<blockquote>
+<p>(函数间隔)给定训练数据集<span class="math inline">\(T\)</span>和超平面<span class="math inline">\((w,b)\)</span>,关于样本点<span class="math inline">\((x_i,y_i)\)</span>的函数间隔为 <span class="math display">\[
+\hat\gamma_i=y_i(w\cdot x_i+b)
+\]</span> 定义超平面<span class="math inline">\((w,b)\)</span>关于训练数据集<span class="math inline">\(T\)</span>的函数间隔为超平面<span class="math inline">\((w,b)\)</span>关于<span class="math inline">\(T\)</span>中所有样本点<span class="math inline">\((x_i,y_i)\)</span>的函数间隔最小值， <span class="math display">\[
+\hat \gamma= \min_{i=1,\cdots,N}\hat \gamma_i
 \]</span></p>
-<p><span class="math display">\[
-P(X^{(j)}=a_{jl}|Y=c_k)=\frac{\sum\limits^N_{i=1}I(x_i^{(j)}=a_{jl},y_j=c_k)}{\sum\limits^N_{i=1}I(y_i=c_k)}\\j=1,2,\cdots,n;l=1,2,\cdots,S_j;k=1,2,\cdots,K
-\]</span></p></li>
-<li><p>对于给定的实例<span class="math inline">\(x=(x^{(1)},x^{(2)},\cdots,x^{(n)})^T\)</span>,计算 <span class="math display">\[
-p(Y=c_k)\prod^n_{j=1}P(X^{(j)}=x^{(j)}|Y=c_k),k=1,2,\cdots,K
-\]</span></p></li>
-<li><p>确定实例x的类 <span class="math display">\[
-y=arg\max\limits_{c_k}P(Y=c_k)\prod\limits^n_{j=1}P(X^{j}=x^{j}|Y=c_k)
-\]</span></p></li>
-</ol>
-<h3 id="贝叶斯估计">贝叶斯估计</h3>
-<p>极大似然估计可能会出现要估计的概率值为0的情况，这会影响到后验概率的计算结果。使分类产生偏差。可以用贝叶斯估计来解决这一问题；具体的</p>
-<hr>
-<p>先验概率的贝叶斯估计是 <span class="math display">\[
-P_\lambda(Y=c_k)=\frac{\sum\limits_{i=1}^NI(y_i=c_k)+\lambda}{N+K\lambda}
-\]</span> 条件概率的贝叶斯估计是 <span class="math display">\[
-P\lambda(X^{(j)}=a_{jl}|Y=c_k)=\frac{\sum\limits^N_{i=1}I(x_i^{(j)}=a_{jl},y_i=c_k)+\lambda}{\sum\limits^{S_j}_{i=1}I(y_i=c_k)+S_j\lambda}
+</blockquote>
+<p>函数间隔可以表示分类预测的正确性及确信度，但是选择分离超平面时，只有函数间隔是不够的；如果成比例改变w和b，超平面没有改变但是间隔却变为原来的两倍；</p>
+<p>因此我们可以对分离超平面的法向量加某些约束，如规范化，<span class="math inline">\(||w||=1\)</span>,使得间隔是确定的，这时函数间隔为几何间隔 <span class="math display">\[
+\gamma_i=\frac w{||w||}\cdot x_i+\frac b{||w||}
+\]</span> <img src="/archives/几何间隔.png"></p>
+<p>定义</p>
+<blockquote>
+<p>（几何间隔）对于给定的训练数据集<span class="math inline">\(T\)</span>和超平面<span class="math inline">\((w,b)\)</span>,定义超平面<span class="math inline">\((w,b)\)</span>关于样本点<span class="math inline">\((x_i,y_i)\)</span>的几何间隔为 <span class="math display">\[
+\gamma_i=y_i(\frac w{||w||}\cdot x_i+\frac b{||w||})
+\]</span> 定义超平面<span class="math inline">\((w,b)\)</span>关于训练数据集<span class="math inline">\(T\)</span>的函数间隔为超平面<span class="math inline">\((w,b)\)</span>关于<span class="math inline">\(T\)</span>中所有样本点<span class="math inline">\((x_i,y_i)\)</span>的函数间隔最小值， <span class="math display">\[
+\gamma= \min_{i=1,\cdots,N} \gamma_i
 \]</span></p>
-<hr>
-<p>其中，<span class="math inline">\(\lambda\geq0\)</span>,相当于在随机变量各个取值上赋予一个整数<span class="math inline">\(\lambda&gt;0\)</span>.当<span class="math inline">\(\lambda=0\)</span>时就是极大似然估计；常取<span class="math inline">\(\lambda=1\)</span>,这时称为拉普拉斯平滑。显然 <span class="math display">\[
-P_\lambda(X^{(j)}=a_{jl}|Y=c_k)&gt;0\\ \sum\limits^{S_j}_{j=1}P(X^{(j)}=a_{jl}|Y=c_k)=1
-\]</span></p>
+</blockquote>
+<p>超平面<span class="math inline">\((w,b)\)</span>关于样本点<span class="math inline">\((x_i,y_i)\)</span>的几何间隔一般是实例点到朝平面的带符号距离，正确分类时就是实例点到超平面的距离；</p>
+<p>函数间隔和几何间隔有如下关系 <span class="math display">\[
+\gamma_i=\frac{\hat \gamma_i}{||w||}\\
+\gamma=\frac{\hat \gamma}{||w||}
+\]</span> 如果<span class="math inline">\(||w||=1\)</span>,那么函数间隔和几何间隔相等；</p>
+<h2 id="间隔最大化">间隔最大化</h2>
+<p><span class="math inline">\(a&#39;\)</span></p>
 
     </div>
 
@@ -313,12 +336,12 @@ P_\lambda(X^{(j)}=a_{jl}|Y=c_k)&gt;0\\ \sum\limits^{S_j}_{j=1}P(X^{(j)}=a_{jl}|Y
   <div id="qr" style="display: none;">
       
       <div style="display: inline-block;">
-        <img src="/images/wechatpay.png" alt="Binlong Zhang 微信支付">
+        <img src="/images/wechatpay.png" alt="Gonlnib 微信支付">
         <p>微信支付</p>
       </div>
       
       <div style="display: inline-block;">
-        <img src="/images/alipay.jpg" alt="Binlong Zhang 支付宝">
+        <img src="/images/alipay.jpg" alt="Gonlnib 支付宝">
         <p>支付宝</p>
       </div>
 
@@ -330,6 +353,7 @@ P_\lambda(X^{(j)}=a_{jl}|Y=c_k)&gt;0\\ \sum\limits^{S_j}_{j=1}P(X^{(j)}=a_{jl}|Y
 
 
       <footer class="post-footer">
+          
           <div class="post-tags">
               <a href="/tags/%E6%A6%82%E7%8E%87%E8%AE%BA/" rel="tag"><i class="fa fa-tag"></i> 概率论</a>
               <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
@@ -341,11 +365,11 @@ P_\lambda(X^{(j)}=a_{jl}|Y=c_k)&gt;0\\ \sum\limits^{S_j}_{j=1}P(X^{(j)}=a_{jl}|Y
 
         
     <div class="post-nav">
-      <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2020/02/09/%E5%86%B3%E7%AD%96%E6%A0%91/" rel="next" title="决策树">
-      决策树 <i class="fa fa-chevron-right"></i>
+    <a href="/archives/7e7ef195.html" rel="prev" title="logistic回归和最大熵模型">
+      <i class="fa fa-chevron-left"></i> logistic回归和最大熵模型
     </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -405,16 +429,16 @@ P_\lambda(X^{(j)}=a_{jl}|Y=c_k)&gt;0\\ \sum\limits^{S_j}_{j=1}P(X^{(j)}=a_{jl}|Y
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#数学基础"><span class="nav-number">1.</span> <span class="nav-text">数学基础</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#核心原理"><span class="nav-number">2.</span> <span class="nav-text">核心原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#朴素贝叶斯的参数估计"><span class="nav-number">3.</span> <span class="nav-text">朴素贝叶斯的参数估计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#极大似然估计"><span class="nav-number">3.1.</span> <span class="nav-text">极大似然估计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#贝叶斯估计"><span class="nav-number">3.2.</span> <span class="nav-text">贝叶斯估计</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#线性可分支持向量机"><span class="nav-number">2.</span> <span class="nav-text">线性可分支持向量机</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#函数间隔和几何间隔"><span class="nav-number">2.1.</span> <span class="nav-text">函数间隔和几何间隔</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#间隔最大化"><span class="nav-number">2.2.</span> <span class="nav-text">间隔最大化</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <img class="site-author-image" itemprop="image" alt="Binlong Zhang"
-      src="/images/avatar.gif">
-  <p class="site-author-name" itemprop="name">Binlong Zhang</p>
-  <div class="site-description" itemprop="description">Binlong Zhang 的个人博客，主要会涉及一些学习记录、思考、理解，也会有一些个人爱好的展示</div>
+    <img class="site-author-image" itemprop="image" alt="Gonlnib"
+      src="/images/logo.png">
+  <p class="site-author-name" itemprop="name">Gonlnib</p>
+  <div class="site-description" itemprop="description">Gonlnib 的个人博客，主要内容会涉及一些学习记录、思考、理解，也会有一些个人爱好的展示</div>
 </div>
 <div class="site-state-wrap motion-element">
   <nav class="site-state">
@@ -463,7 +487,7 @@ P_\lambda(X^{(j)}=a_{jl}|Y=c_k)&gt;0\\ \sum\limits^{S_j}_{j=1}P(X^{(j)}=a_{jl}|Y
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">张斌龙</span>
+  <span class="author" itemprop="copyrightHolder">gonlnib</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
@@ -528,6 +552,10 @@ P_\lambda(X^{(j)}=a_{jl}|Y=c_k)&gt;0\\ \sum\limits^{S_j}_{j=1}P(X^{(j)}=a_{jl}|Y
   
 
 
+
+
+  
+<script src="/js/local-search.js"></script>
 
 
 

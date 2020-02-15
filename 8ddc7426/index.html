@@ -1,4 +1,540 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=2"><meta name="theme-color" content="#222"><meta name="generator" content="Hexo 4.2.0"><link rel="apple-touch-icon" sizes="180x180" href="/images/logo.png"><link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.ico"><link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.ico"><link rel="mask-icon" href="/images/logo.png" color="#222"><link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css"><script id="hexo-configurations">var NexT=window.NexT||{},CONFIG={hostname:"binlongzhang.github.io",root:"/",scheme:"Gemini",version:"7.7.1",exturl:!1,sidebar:{position:"left",display:"post",padding:18,offset:12,onmobile:!1},copycode:{enable:!0,show_result:!0,style:null},back2top:{enable:!0,sidebar:!1,scrollpercent:!0},bookmark:{enable:"ture",color:"#222",save:"auto"},fancybox:!1,mediumzoom:!1,lazyload:!1,pangu:!1,comments:{style:"tabs",active:null,storage:!0,lazyload:!1,nav:null},algolia:{hits:{per_page:10},labels:{input_placeholder:"Search for Posts",hits_empty:"We didn't find any results for the search: ${query}",hits_stats:"${hits} results found in ${time} ms"}},localsearch:{enable:!0,trigger:"auto",top_n_per_article:1,unescape:!1,preload:!1},motion:{enable:!0,async:!1,transition:{post_block:"fadeIn",post_header:"slideDownIn",post_body:"slideDownIn",coll_header:"slideLeftIn",sidebar:"slideUpIn"}},path:"search.xml"}</script><meta name="description" content="核心原理  可以将决策树看成是一个if-then规则的集合，决策树的路径或其对应的if-then规则集合互斥且完备；每一个实例都被一条路径或一条规则覆盖，而且只被一条路径或规则覆盖；"><meta property="og:type" content="article"><meta property="og:title" content="决策树"><meta property="og:url" content="https://binlongzhang.github.io/8ddc7426/index.html"><meta property="og:site_name" content="Gonlnib&#39;s Blog"><meta property="og:description" content="核心原理  可以将决策树看成是一个if-then规则的集合，决策树的路径或其对应的if-then规则集合互斥且完备；每一个实例都被一条路径或一条规则覆盖，而且只被一条路径或规则覆盖；"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://binlongzhang.github.io/8ddc7426/%E5%86%B3%E7%AD%96%E6%A0%91%E5%AF%B9%E5%BA%94%E6%9D%A1%E4%BB%B6%E6%A6%82%E7%8E%87%E5%88%86%E5%B8%83.png"><meta property="og:image" content="https://binlongzhang.github.io/8ddc7426/%E7%86%B5%E4%B8%8E%E6%A6%82%E7%8E%87%E5%8F%98%E5%8C%96%E7%9A%84%E6%9B%B2%E7%BA%BF.png"><meta property="og:image" content="https://binlongzhang.github.io/8ddc7426/%E5%9F%BA%E5%B0%BC%E6%8C%87%E6%95%B0_%E7%86%B5_%E5%88%86%E7%B1%BB%E8%AF%AF%E5%B7%AE%E7%8E%87.png"><meta property="article:published_time" content="2020-02-09T14:32:11.375Z"><meta property="article:modified_time" content="2020-02-14T04:20:48.464Z"><meta property="article:author" content="Gonlnib"><meta property="article:tag" content="概率论"><meta property="article:tag" content="机器学习"><meta property="article:tag" content="统计学习"><meta name="twitter:card" content="summary"><meta name="twitter:image" content="https://binlongzhang.github.io/8ddc7426/%E5%86%B3%E7%AD%96%E6%A0%91%E5%AF%B9%E5%BA%94%E6%9D%A1%E4%BB%B6%E6%A6%82%E7%8E%87%E5%88%86%E5%B8%83.png"><link rel="canonical" href="https://binlongzhang.github.io/8ddc7426/"><script id="page-configurations">CONFIG.page={sidebar:"",isHome:!1,isPost:!0}</script><title>决策树 | Gonlnib's Blog</title><noscript><style>.sidebar-inner,.use-motion .brand,.use-motion .collection-header,.use-motion .comments,.use-motion .menu-item,.use-motion .pagination,.use-motion .post-block,.use-motion .post-body,.use-motion .post-header{opacity:initial}.use-motion .site-subtitle,.use-motion .site-title{opacity:initial;top:initial}.use-motion .logo-line-before i{left:initial}.use-motion .logo-line-after i{right:initial}</style></noscript></head><body itemscope itemtype="http://schema.org/WebPage"><div class="container use-motion"><div class="headband"></div><header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="header-inner"><div class="site-brand-container"><div class="site-meta"><div><a href="/" class="brand" rel="start"><span class="logo-line-before"><i></i></span> <span class="site-title">Gonlnib's Blog</span><span class="logo-line-after"><i></i></span></a></div></div><div class="site-nav-toggle"><div class="toggle" aria-label="切换导航栏"><span class="toggle-line toggle-line-first"></span><span class="toggle-line toggle-line-middle"></span><span class="toggle-line toggle-line-last"></span></div></div></div><nav class="site-nav"><ul id="menu" class="menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-fw fa-home"></i> 首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i> 关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i> 标签<span class="badge">3</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i> 分类<span class="badge">2</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i> 归档<span class="badge">5</span></a></li><li class="menu-item menu-item-search"><a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i> 搜索</a></li></ul></nav><div class="site-search"><div class="popup search-popup"><div class="search-header"><span class="search-icon"><i class="fa fa-search"></i></span><div class="search-input-container"> <input autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="搜索..." spellcheck="false" type="search" class="search-input"></div><span class="popup-btn-close"><i class="fa fa-times-circle"></i></span></div><div id="search-result"></div></div><div class="search-pop-overlay"></div></div></div></header><div class="back-to-top"><i class="fa fa-arrow-up"></i> <span>0%</span></div><div class="reading-progress-bar"></div><a role="button" class="book-mark-link book-mark-link-fixed"></a><main class="main"><div class="main-inner"><div class="content-wrap"><div class="content"><div class="posts-expand"><article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN"><link itemprop="mainEntityOfPage" href="https://binlongzhang.github.io/8ddc7426/"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="image" content="/images/logo.png"><meta itemprop="name" content="Gonlnib"><meta itemprop="description" content="Gonlnib 的个人博客，主要内容会涉及一些学习记录、思考、理解，也会有一些个人爱好的展示"></span><span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="Gonlnib's Blog"></span><header class="post-header"><h1 class="post-title" itemprop="name headline"> 决策树</h1><div class="post-meta"><span class="post-meta-item"><span class="post-meta-item-icon"><i class="fa fa-calendar-o"></i></span> <span class="post-meta-item-text">发表于</span> <time title="创建时间：2020-02-09 22:32:11" itemprop="dateCreated datePublished" datetime="2020-02-09T22:32:11+08:00">2020-02-09</time></span><span class="post-meta-item"><span class="post-meta-item-icon"><i class="fa fa-calendar-check-o"></i></span> <span class="post-meta-item-text">更新于</span> <time title="修改时间：2020-02-14 12:20:48" itemprop="dateModified" datetime="2020-02-14T12:20:48+08:00">2020-02-14</time></span><span class="post-meta-item"><span class="post-meta-item-icon"><i class="fa fa-folder-o"></i></span> <span class="post-meta-item-text">分类于</span> <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a></span> ， <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">统计学习</span></a></span></span><br><span id="/8ddc7426/" class="post-meta-item leancloud_visitors" data-flag-title="决策树" title="阅读次数"><span class="post-meta-item-icon"><i class="fa fa-eye"></i></span> <span class="post-meta-item-text">阅读次数：</span><span class="leancloud-visitors-count"></span></span><span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display:none"><span class="post-meta-item-icon"><i class="fa fa-eye"></i></span> <span class="post-meta-item-text">阅读次数：</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-item"><span class="post-meta-item-icon"><i class="fa fa-comment-o"></i></span> <span class="post-meta-item-text">Valine：</span><a title="valine" href="/8ddc7426/#valine-comments" itemprop="discussionUrl"><span class="post-comments-count valine-comment-count" data-xid="/8ddc7426/" itemprop="commentCount"></span></a></span><br><span class="post-meta-item" title="本文字数"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i></span> <span class="post-meta-item-text">本文字数：</span> <span>5k</span></span></div></header><div class="post-body" itemprop="articleBody"><h1 id="核心原理">核心原理</h1><blockquote><p>可以将决策树看成是一个if-then规则的集合，决策树的路径或其对应的if-then规则集合<strong>互斥且完备</strong>；每一个实例都被一条路径或一条规则覆盖，而且只被一条路径或规则覆盖；</p></blockquote><p>决策树与条件概率分布示意图</p><p><img src="/8ddc7426/决策树对应条件概率分布.png"></p><p><strong>决策树学习的目标</strong></p><p>根据给定的训练数据集构建一个决策树模型（学习），并使他们能够对实例进行正确的分类(泛 化)；</p><p><strong>决策树学习的损失函数通常是正则化的极大似然函数。决策树学习的策略是以损失函数为目标函数的最小化</strong>；损失函数确定后，学习问题就变成了损失函数意义下选择最优决策树的问题；由于从所有决策树中寻找最优决策树是np完全问题，所以常常使用启发式的算法来近似求解这一最优化问题；以此寻找到次最优的；</p><hr><p><strong>决策树学习的核心</strong></p><ul><li>特征选择——（选取核心数据）</li><li>决策树生成——（构建决策树）——局部最优</li><li>决策树剪枝——（提高泛化能力）——全局最优</li></ul><h1 id="特征选择">特征选择</h1><h2 id="信息增益">信息增益</h2><p><strong>信息增益是衡量特征选择的一个重要指标；</strong>用表示训练数据集对应某个特征所具备的分类能力；</p><h3 id="熵">熵</h3><blockquote><p>信息论与概率统计中，熵（entropy）是表示随机变量不确定性的度量。设X是一个取有限个值的离散随机变量，其概率分布为 <span class="math display">\[ P(X=x_i)=p_i,i=1,2,\cdots,n \]</span> 则随机变量的熵定义为 <span class="math display">\[ H(X)=-\sum\limits^n_{i=1}p_i\log p_i\\其中定义：0\log0=0 \]</span> 其中对数常取2为底或者e为底，这时熵的单位分别是比特或纳特。从定义可知熵只依赖于X的分布，而与X的取值无关，所以也将X的熵就做<span class="math inline">\(H(p)\)</span>;熵越大，随机变量的不确定性就越大，且有定义可知 <span class="math display">\[ 0\leq H(p)\leq\log n（基本不等式可推导） \]</span> p_当随机变量只有两个取值0，1时，熵为 <span class="math display">\[ H(p)=-p\log_2p-(1-p)\log_2(1-p) \]</span> 这时熵<span class="math inline">\(H(p)\)</span>随概率<span class="math inline">\(p\)</span>变化的曲线如图所示</p><p><img src="/8ddc7426/熵与概率变化的曲线.png"></p><p>条件熵<span class="math inline">\(H(Y|X)\)</span>表示在随机变量X已知的条件下随机变量Y的不确定性。定义为X给定条件下Y的条件概率分布的熵对X的数学期望 <span class="math display">\[ H(Y|X)=\sum\limits_{i=1}^np_iH(Y|X=x_i),其中p_i=P(X=x_i),i=1,2,\cdots,n \]</span></p><hr><p>当熵和条件熵中的概率由数据估计得到时，所对应的熵与条件熵分别称为经验上和经验条件熵</p></blockquote><p><strong>信息增益表示得知特征X的信息儿时的类Y的信息不确定性减少的程度</strong></p><p>定义：特征A对训练数据集D的信息增益g(D,A),集合D的经验熵<span class="math inline">\(H(D)\)</span>与特征A给定条件下D的经验条件熵<span class="math inline">\(H(D|A)\)</span>之差 <span class="math display">\[ g(D,A)=H(D)-H(D|A) \]</span></p><h3 id="算法">算法</h3><ol type="1"><li>计算数据集D的经验熵<span class="math inline">\(H(D)\)</span></li></ol><p><span class="math display">\[ H(D)=-\sum\limits_{k=1}^k\frac{|C_K|}{|D|}\log_2\frac{|C_K|}{|D|} \]</span></p><ol start="2" type="1"><li><p>计算特征A对数据集D的经验条件熵 <span class="math display">\[ H(D|A)= \sum^n_{i=1}\frac{|D_i|}{|D|}H(D_i) \]</span></p></li><li><p>计算信息增益</p></li></ol><p><span class="math display">\[ g(D,A) = H(D)-H(D|A) \]</span></p><h3 id="信息增益比">信息增益比</h3><p>信息增益划分数据及特征存在偏向于选择取值较多的特征的问题。使用信息增益比可以对此作出矫正</p><p>信息增益比定义： <span class="math display">\[ g_R(D,A)=\frac{g(D,A)}{H_A(D)}\\ 其中，H_A(D)=-\sum^n_{i=1}\frac{|D_i|}{|D|}\log_2\frac{|Di|}{|D|} \]</span></p><h1 id="决策树生成">决策树生成</h1><h2 id="id3算法">ID3算法</h2><ol type="1"><li>若D中所有的实例属于同一类，则T为单节点树，并将类<span class="math inline">\(C_k\)</span>作为该节点的类标记，返回T;</li><li>若<span class="math inline">\(A=\emptyset\)</span>,则T为单节点树，并将D中的实例树最大的类<span class="math inline">\(C_K\)</span>作为该节点的类标记，返回T;</li><li>否则，计算A中各特征对D的信息增益，选择信息增益最大的特征<span class="math inline">\(A_g\)</span>;</li><li>如果<span class="math inline">\(A_g\)</span>的信息增益小于阀值，则置T为单节点树，并将D中实例数最大的类<span class="math inline">\(C_k\)</span>作为标记，返回T；</li><li>否则，对于<span class="math inline">\(A_g\)</span>中的每一可能值<span class="math inline">\(a_i\)</span>,依<span class="math inline">\(A_g=a_i\)</span>,将D分割为若干非空子集<span class="math inline">\(D_i\)</span>，将<span class="math inline">\(D_I\)</span>中实例数最大的类作为标记，构建子节点，由节点及其子节点构成树T，返回T;</li><li>对第i个子节点，以<span class="math inline">\(D_i\)</span>为训练集，以<span class="math inline">\(A-\{A_g\}\)</span>为特征集，递归的调用步骤1~5，得到子树<span class="math inline">\(T_i\)</span>,返回<span class="math inline">\(T_i\)</span>;</li></ol><h2 id="c4.5的生成算法">C4.5的生成算法</h2><p>与ID3算法相似，C4.5在生成的过程中，用信息增益比来选择特征；</p><h1 id="决策树剪枝">决策树剪枝</h1><h2 id="原理">原理</h2><p>递归生成的决策树往往对训练数据分类准确但是对未知数据的分类没有那么准确，会出现过拟合现象，因此需要从已经生成的树上裁掉一些子树或叶节点，从而简化分类树模型；</p><p><strong>决策树的剪枝往往通过极小化决策树整体的损失函数或代价函数来实现；</strong>设树T的叶节点个数为<span class="math inline">\(|T|\)</span>,t是树T的叶节点，该叶节点有<span class="math inline">\(N_t\)</span>个样本点，其中k类的样本点有<span class="math inline">\(N_{tk}\)</span>个，<span class="math inline">\(k=1,2,\cdots,K,H_t(T)\)</span>为叶节点上的经验熵，<span class="math inline">\(\alpha\geq0\)</span>为参数，则决策树损失函数定义为 <span class="math display">\[ C_a(T)=\sum\limits^{|T|}_{t=1}{N_tH_t(T)+\alpha|T|}\\其中经验熵为:H_t(T)=-\sum_k\frac{N_{tk}}{N_t}\log\frac{N_{tk}}{N_t}\\简写为：C_\alpha(T)=C(T)+\alpha|T| \]</span> <span class="math inline">\(C(T)\)</span>表示模型对讯联数据的预测误差，|T|表示模型复杂程度，<span class="math inline">\(\alpha\)</span>用来控制模型复杂度和准确度之间的影响；</p><h2 id="算法-1">算法</h2><ol type="1"><li>计算出每个节点的经验熵；</li><li>递归的从树的叶节点向上回缩；设一组叶节点回缩到其父节点之前与之后的整体树分别为<span class="math inline">\(T_B\)</span>与<span class="math inline">\(T_A\)</span>,其对应的损失函数值分别为<span class="math inline">\(C_a(T_B)\)</span>与<span class="math inline">\(C_a(T_A)\)</span>，如果<span class="math inline">\(C_a(T_A)\leq C_a(T_B)\)</span>则进行剪枝，将父节点变为新的叶节点；</li><li>返回2，知道不能继续为止，得到损失函数最小的子树<span class="math inline">\(T_\alpha\)</span>;</li></ol><p><strong>注意，只需要考虑两个数的损失函数的差，其计算可以再局部进行。所以决策树的剪枝算法可以由一种动态规划算法来实现</strong></p><h1 id="cart算法">CART算法</h1><h2 id="cart生成">CART生成</h2><h3 id="回归树">回归树</h3><p>递归的构建二叉树，对回归树用平方误差最小化准则，对分类树使用基尼指数最小化准则，生成二叉树；</p><p>定义两个区域： <span class="math display">\[ R_1(j,s)=\{x|x^{(j)}\leq s\}，R_2(j,s)=\{x|x^{(j)}&gt; s\}， \]</span> 寻找最优切分变量<span class="math inline">\(j\)</span>和最优切分点<span class="math inline">\(s\)</span>,即求解 <span class="math display">\[ \min\limits_{j,s}[\min\limits_{c_1}\sum\limits_{x_i\in R_1(j,s)}{(y_i-c_1)^2} +\min\limits_{c_2}\sum\limits_{x_i\in R_2(j,s)}{(y_i-c_2)^2} ] \]</span> 对固定的输入变量<span class="math inline">\(j\)</span>可以找到最优切分点<span class="math inline">\(s\)</span> <span class="math display">\[ \hat c_1 = ave(y_i|x_i\in R_1(j,s)),\hat c_2 = ave(y_i|x_i\in R_2(j,s)) \]</span> 遍历所有输入变量，找到切分点构成一对<span class="math inline">\((j,s)\)</span>.依此将输入空间划分成两个区域，紧接着重复划分，到满足停止条件；这样就得到了一棵回归树，这样的称为最小二乘回归树；</p><p><strong>算法</strong></p><ol type="1"><li>选择最优切分变量<span class="math inline">\(j\)</span>与切分点<span class="math inline">\(s\)</span>,求解</li></ol><p><span class="math display">\[ \min\limits_{j,s}[\min\limits_{c_1}\sum\limits_{x_i\in R_1(j,s)}{(y_i-c_1)^2} +\min\limits_{c_2}\sum\limits_{x_i\in R_2(j,s)}{(y_i-c_2)^2} ] \]</span></p><p>找到使之最小的一组解<span class="math inline">\((j,s)\)</span></p><ol start="2" type="1"><li>用选定的对<span class="math inline">\((j,s)\)</span>划分区域并决定对应的输出值：</li></ol><p><span class="math display">\[ \hat c_m=\frac1{N_m}\sum\limits_{s_i\in R_m(j,x)}y_i,\,x\in R_m,\,\,m=1,2 \]</span></p><ol start="3" type="1"><li>继续对两个区域调用步骤1,2，直至满足停止条件</li><li>将输入控件划分成<span class="math inline">\(M\)</span>个区域，生成决策树；</li></ol><p><span class="math display">\[ f(x)=\sum\limits^M_{m=1}\hat c_mI(x\in R_m) \]</span></p><h3 id="分类树">分类树</h3><p><strong>基尼指数定义</strong></p><p>分类问题中，假设有k个类，样本点属于第k类的概率为概率为<span class="math inline">\(p_k\)</span>,对于给定的样本集合<span class="math inline">\(D\)</span>,其基尼指数为 <span class="math display">\[ Gini(p)=1-\sum\limits^K_{k=1}p^2_k \]</span> 在特征A的条件下，集合D的基尼指数定义为 <span class="math display">\[ Gini(D,A)=\frac{|D_1|}{|D|}Gini(D_1)+\frac{|D_2|}{|D|}Gini(D_2) \]</span> 基尼指数<span class="math inline">\(Gini(D)\)</span>表示集合<span class="math inline">\(D\)</span>的不确定性，基尼指数<span class="math inline">\(Gini(D,A)\)</span>表示经过类<span class="math inline">\(A=a\)</span>分割后集合<span class="math inline">\(D\)</span>的不确定性；基尼指数越大，不确定性就越大</p><p><img src="/8ddc7426/基尼指数_熵_分类误差率.png"></p><p><strong>算法</strong></p><ol type="1"><li><p>设节点的训练数据集为<span class="math inline">\(D\)</span>,计算现有特征对该数据及的基尼指数。对每一个特征<span class="math inline">\(A\)</span>,其可能的每个取值<span class="math inline">\(a\)</span>根据样本点对<span class="math inline">\(A=a\)</span>测试为“是”或”否“将<span class="math inline">\(D\)</span>分割为<span class="math inline">\(D_1,D_2\)</span>两部分,计算<span class="math inline">\(A=a\)</span>时<span class="math inline">\(Gini(D,A)\)</span>；</p></li><li><p>在所有可能的特征<span class="math inline">\(A\)</span>以及它们所有可能的切分点<span class="math inline">\(a\)</span>中选择基尼指数最小的特征及其切分点；并生成两个子节点。将现有的数据集依据特征分配到两个子节点中；</p></li><li><p>对两个子节点递归的调用1,2;</p></li><li><p>生成CART决策树；</p></li></ol><h2 id="cart剪枝">CART剪枝</h2><p><strong>原理</strong></p><p>定义子树的损失函数： <span class="math display">\[ C_\alpha(T)=C(T)+\alpha|T| \]</span> 具体的，从整体<span class="math inline">\(T_0\)</span>,开始剪枝，对<span class="math inline">\(T_0\)</span>的任意内部节点<span class="math inline">\(t\)</span>,以<span class="math inline">\(t\)</span>为单节点树的损失函数为 <span class="math display">\[ C_\alpha(t) = C(t)+\alpha \]</span> 以<span class="math inline">\(t\)</span>为根节点的子树<span class="math inline">\(T_t\)</span>的损失函数为 <span class="math display">\[ C_\alpha(T_t)=C(T_t)+\alpha|T_t| \]</span> 通过上面式易得，<span class="math inline">\(\alpha=\frac{C(t)-C(T_t)}{|T_t|-1}\)</span>为剪枝的零界点，此时虽然二者有相同的损失函数，但<span class="math inline">\(t\)</span>比<span class="math inline">\(T_t\)</span>结点少，因此应该剪枝；</p><p>为此对<span class="math inline">\(T_0\)</span>中的每一个内部节点<span class="math inline">\(t\)</span>计算 <span class="math display">\[ g(t)=\frac{C(t)-C(T_t)}{|T_t-1|} \]</span> 表示剪枝后整体损失函数减小的程度.在<span class="math inline">\(T_0\)</span>中减去<span class="math inline">\(g(t)\)</span>最小的<span class="math inline">\(T_t\)</span>,将得到的子树作为<span class="math inline">\(T_t\)</span>,将得到的子树作为<span class="math inline">\(T_1\)</span>，同时将最小的<span class="math inline">\(g(t)\)</span>设为<span class="math inline">\(\alpha_1\)</span>.<span class="math inline">\(T_1\)</span>为区间<span class="math inline">\([\alpha_1,\alpha_2)\)</span>的最优子树。如此不断剪枝直到根节点；期间不断产生新的<span class="math inline">\(\alpha\)</span>,并产生新的区间；</p><p><strong>在得到的子树序列中使用交叉验证发求得最优子树<span class="math inline">\(T_\alpha\)</span></strong></p><p>具体的，利用独立的验证数据集，测试子树序列中的各个子树的平方误差或基尼指数。寻找对应指数最小的子树，同时子树确定也就意味着独影的<span class="math inline">\(\alpha_k\)</span>确定；</p><hr><p><strong>算法</strong></p><ol type="1"><li><p>设<span class="math inline">\(k=0,T=T_0\)</span>;</p></li><li><p>设<span class="math inline">\(\alpha=+\infty;\)</span></p></li><li><p>自上而下的对各内部节点<span class="math inline">\(t\)</span>计算<span class="math inline">\(C(T_1),|T_t|\)</span>以及</p></li></ol><p><span class="math display">\[ g(t)=\frac{C(t)-C(T_t)}{|T_t|-1} \,,\alpha=\min(\alpha,g(t)) \]</span></p><p>这里，<span class="math inline">\(T_t\)</span>表示以<span class="math inline">\(t\)</span>为根节点的子树，<span class="math inline">\(C(T_t)\)</span>是对训练数据集的预测误差，<span class="math inline">\(|T_t|\)</span>是<span class="math inline">\(T_t\)</span>的叶节点个数；</p><ol start="4" type="1"><li>对<span class="math inline">\(g(t)=\alpha\)</span>的内部节点<span class="math inline">\(t\)</span>进行剪枝，并对叶节点<span class="math inline">\(t\)</span>以多数表决的方法确定其类，得到树<span class="math inline">\(T\)</span>;</li><li>设<span class="math inline">\(k=k+1,\alpha_k=\alpha,T_k=T\)</span>;</li><li>如果<span class="math inline">\(T_k\)</span>不是由根节点及两个叶节点构成的树，则回退到步骤2；否则令<span class="math inline">\(T_k=T_n\)</span>;</li><li>采用交叉验证法在子树序列<span class="math inline">\(T_0,T_1,\cdots,T_n\)</span>中选取最优子树<span class="math inline">\(T_\alpha\)</span>;</li></ol></div><div> ﻿<div><div style="text-align:center;color:#ccc;font-size:14px">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div></div></div><div class="reward-container"><div>作者将会持续总结、分享，如果愿意支持作者，作者将会十分感激！！！</div> <button onclick='var qr=document.getElementById("qr");qr.style.display="none"===qr.style.display?"block":"none"'> 打赏</button><div id="qr" style="display:none"><div style="display:inline-block"> <img src="/images/wechatpay.png" alt="Gonlnib 微信支付"><p>微信支付</p></div><div style="display:inline-block"> <img src="/images/alipay.jpg" alt="Gonlnib 支付宝"><p>支付宝</p></div></div></div><footer class="post-footer"><div class="post-tags"><a href="/tags/%E6%A6%82%E7%8E%87%E8%AE%BA/" rel="tag"><i class="fa fa-tag"></i> 概率论</a><a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a><a href="/tags/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 统计学习</a></div><div class="post-nav"><div class="post-nav-item"><a href="/f77f0066/" rel="prev" title="朴素贝叶斯"><i class="fa fa-chevron-left"></i> 朴素贝叶斯</a></div><div class="post-nav-item"> <a href="/dff65b00/" rel="next" title="k近邻法">k近邻法<i class="fa fa-chevron-right"></i></a></div></div></footer></article></div></div><div class="comments" id="valine-comments"></div><script>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.ico">
+  <link rel="mask-icon" href="/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"binlongzhang.github.io","root":"/","scheme":"Gemini","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":"ture","color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="核心原理  可以将决策树看成是一个if-then规则的集合，决策树的路径或其对应的if-then规则集合互斥且完备；每一个实例都被一条路径或一条规则覆盖，而且只被一条路径或规则覆盖；">
+<meta property="og:type" content="article">
+<meta property="og:title" content="决策树">
+<meta property="og:url" content="https://binlongzhang.github.io/8ddc7426/index.html">
+<meta property="og:site_name" content="Gonlnib&#39;s Blog">
+<meta property="og:description" content="核心原理  可以将决策树看成是一个if-then规则的集合，决策树的路径或其对应的if-then规则集合互斥且完备；每一个实例都被一条路径或一条规则覆盖，而且只被一条路径或规则覆盖；">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://binlongzhang.github.io/8ddc7426/%E5%86%B3%E7%AD%96%E6%A0%91%E5%AF%B9%E5%BA%94%E6%9D%A1%E4%BB%B6%E6%A6%82%E7%8E%87%E5%88%86%E5%B8%83.png">
+<meta property="og:image" content="https://binlongzhang.github.io/8ddc7426/%E7%86%B5%E4%B8%8E%E6%A6%82%E7%8E%87%E5%8F%98%E5%8C%96%E7%9A%84%E6%9B%B2%E7%BA%BF.png">
+<meta property="og:image" content="https://binlongzhang.github.io/8ddc7426/%E5%9F%BA%E5%B0%BC%E6%8C%87%E6%95%B0_%E7%86%B5_%E5%88%86%E7%B1%BB%E8%AF%AF%E5%B7%AE%E7%8E%87.png">
+<meta property="article:published_time" content="2020-02-09T14:32:11.375Z">
+<meta property="article:modified_time" content="2020-02-14T04:20:48.464Z">
+<meta property="article:author" content="Gonlnib">
+<meta property="article:tag" content="概率论">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="统计学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://binlongzhang.github.io/8ddc7426/%E5%86%B3%E7%AD%96%E6%A0%91%E5%AF%B9%E5%BA%94%E6%9D%A1%E4%BB%B6%E6%A6%82%E7%8E%87%E5%88%86%E5%B8%83.png">
+
+<link rel="canonical" href="https://binlongzhang.github.io/8ddc7426/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>决策树 | Gonlnib's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Gonlnib's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">3</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">2</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">5</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://binlongzhang.github.io/8ddc7426/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/logo.png">
+      <meta itemprop="name" content="Gonlnib">
+      <meta itemprop="description" content="Gonlnib 的个人博客，主要内容会涉及一些学习记录、思考、理解，也会有一些个人爱好的展示">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gonlnib's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          决策树
+        </h1>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-02-09 22:32:11" itemprop="dateCreated datePublished" datetime="2020-02-09T22:32:11+08:00">2020-02-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-02-14 12:20:48" itemprop="dateModified" datetime="2020-02-14T12:20:48+08:00">2020-02-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index">
+                    <span itemprop="name">统计学习</span>
+                  </a>
+                </span>
+            </span>
+
+          
+          <br>
+            <span id="/8ddc7426/" class="post-meta-item leancloud_visitors" data-flag-title="决策树" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/8ddc7426/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/8ddc7426/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5k</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="核心原理">核心原理</h1>
+<blockquote>
+<p>可以将决策树看成是一个if-then规则的集合，决策树的路径或其对应的if-then规则集合<strong>互斥且完备</strong>；每一个实例都被一条路径或一条规则覆盖，而且只被一条路径或规则覆盖；</p>
+</blockquote>
+<p>决策树与条件概率分布示意图</p>
+<p><img src="/8ddc7426/决策树对应条件概率分布.png"></p>
+<p><strong>决策树学习的目标</strong></p>
+<p>根据给定的训练数据集构建一个决策树模型（学习），并使他们能够对实例进行正确的分类(泛 化)；</p>
+<p><strong>决策树学习的损失函数通常是正则化的极大似然函数。决策树学习的策略是以损失函数为目标函数的最小化</strong>；损失函数确定后，学习问题就变成了损失函数意义下选择最优决策树的问题；由于从所有决策树中寻找最优决策树是np完全问题，所以常常使用启发式的算法来近似求解这一最优化问题；以此寻找到次最优的；</p>
+<hr>
+<p><strong>决策树学习的核心</strong></p>
+<ul>
+<li>特征选择——（选取核心数据）</li>
+<li>决策树生成——（构建决策树）——局部最优</li>
+<li>决策树剪枝——（提高泛化能力）——全局最优</li>
+</ul>
+<h1 id="特征选择">特征选择</h1>
+<h2 id="信息增益">信息增益</h2>
+<p><strong>信息增益是衡量特征选择的一个重要指标；</strong>用表示训练数据集对应某个特征所具备的分类能力；</p>
+<h3 id="熵">熵</h3>
+<blockquote>
+<p>信息论与概率统计中，熵（entropy）是表示随机变量不确定性的度量。设X是一个取有限个值的离散随机变量，其概率分布为 <span class="math display">\[
+P(X=x_i)=p_i,i=1,2,\cdots,n
+\]</span> 则随机变量的熵定义为 <span class="math display">\[
+H(X)=-\sum\limits^n_{i=1}p_i\log p_i\\其中定义：0\log0=0
+\]</span> 其中对数常取2为底或者e为底，这时熵的单位分别是比特或纳特。从定义可知熵只依赖于X的分布，而与X的取值无关，所以也将X的熵就做<span class="math inline">\(H(p)\)</span>;熵越大，随机变量的不确定性就越大，且有定义可知 <span class="math display">\[
+0\leq H(p)\leq\log n（基本不等式可推导）
+\]</span> p_当随机变量只有两个取值0，1时，熵为 <span class="math display">\[
+H(p)=-p\log_2p-(1-p)\log_2(1-p)
+\]</span> 这时熵<span class="math inline">\(H(p)\)</span>随概率<span class="math inline">\(p\)</span>变化的曲线如图所示</p>
+<p><img src="/8ddc7426/熵与概率变化的曲线.png"></p>
+<p>条件熵<span class="math inline">\(H(Y|X)\)</span>表示在随机变量X已知的条件下随机变量Y的不确定性。定义为X给定条件下Y的条件概率分布的熵对X的数学期望 <span class="math display">\[
+H(Y|X)=\sum\limits_{i=1}^np_iH(Y|X=x_i),其中p_i=P(X=x_i),i=1,2,\cdots,n
+\]</span></p>
+<hr>
+<p>当熵和条件熵中的概率由数据估计得到时，所对应的熵与条件熵分别称为经验上和经验条件熵</p>
+</blockquote>
+<p><strong>信息增益表示得知特征X的信息儿时的类Y的信息不确定性减少的程度</strong></p>
+<p>定义：特征A对训练数据集D的信息增益g(D,A),集合D的经验熵<span class="math inline">\(H(D)\)</span>与特征A给定条件下D的经验条件熵<span class="math inline">\(H(D|A)\)</span>之差 <span class="math display">\[
+g(D,A)=H(D)-H(D|A)
+\]</span></p>
+<h3 id="算法">算法</h3>
+<ol type="1">
+<li>计算数据集D的经验熵<span class="math inline">\(H(D)\)</span></li>
+</ol>
+<p><span class="math display">\[
+H(D)=-\sum\limits_{k=1}^k\frac{|C_K|}{|D|}\log_2\frac{|C_K|}{|D|}
+\]</span></p>
+<ol start="2" type="1">
+<li><p>计算特征A对数据集D的经验条件熵 <span class="math display">\[
+H(D|A)= \sum^n_{i=1}\frac{|D_i|}{|D|}H(D_i)
+\]</span></p></li>
+<li><p>计算信息增益</p></li>
+</ol>
+<p><span class="math display">\[
+g(D,A) = H(D)-H(D|A)
+\]</span></p>
+<h3 id="信息增益比">信息增益比</h3>
+<p>信息增益划分数据及特征存在偏向于选择取值较多的特征的问题。使用信息增益比可以对此作出矫正</p>
+<p>信息增益比定义： <span class="math display">\[
+g_R(D,A)=\frac{g(D,A)}{H_A(D)}\\
+其中，H_A(D)=-\sum^n_{i=1}\frac{|D_i|}{|D|}\log_2\frac{|Di|}{|D|}
+\]</span></p>
+<h1 id="决策树生成">决策树生成</h1>
+<h2 id="id3算法">ID3算法</h2>
+<ol type="1">
+<li>若D中所有的实例属于同一类，则T为单节点树，并将类<span class="math inline">\(C_k\)</span>作为该节点的类标记，返回T;</li>
+<li>若<span class="math inline">\(A=\emptyset\)</span>,则T为单节点树，并将D中的实例树最大的类<span class="math inline">\(C_K\)</span>作为该节点的类标记，返回T;</li>
+<li>否则，计算A中各特征对D的信息增益，选择信息增益最大的特征<span class="math inline">\(A_g\)</span>;</li>
+<li>如果<span class="math inline">\(A_g\)</span>的信息增益小于阀值，则置T为单节点树，并将D中实例数最大的类<span class="math inline">\(C_k\)</span>作为标记，返回T；</li>
+<li>否则，对于<span class="math inline">\(A_g\)</span>中的每一可能值<span class="math inline">\(a_i\)</span>,依<span class="math inline">\(A_g=a_i\)</span>,将D分割为若干非空子集<span class="math inline">\(D_i\)</span>，将<span class="math inline">\(D_I\)</span>中实例数最大的类作为标记，构建子节点，由节点及其子节点构成树T，返回T;</li>
+<li>对第i个子节点，以<span class="math inline">\(D_i\)</span>为训练集，以<span class="math inline">\(A-\{A_g\}\)</span>为特征集，递归的调用步骤1~5，得到子树<span class="math inline">\(T_i\)</span>,返回<span class="math inline">\(T_i\)</span>;</li>
+</ol>
+<h2 id="c4.5的生成算法">C4.5的生成算法</h2>
+<p>与ID3算法相似，C4.5在生成的过程中，用信息增益比来选择特征；</p>
+<h1 id="决策树剪枝">决策树剪枝</h1>
+<h2 id="原理">原理</h2>
+<p>递归生成的决策树往往对训练数据分类准确但是对未知数据的分类没有那么准确，会出现过拟合现象，因此需要从已经生成的树上裁掉一些子树或叶节点，从而简化分类树模型；</p>
+<p><strong>决策树的剪枝往往通过极小化决策树整体的损失函数或代价函数来实现；</strong>设树T的叶节点个数为<span class="math inline">\(|T|\)</span>,t是树T的叶节点，该叶节点有<span class="math inline">\(N_t\)</span>个样本点，其中k类的样本点有<span class="math inline">\(N_{tk}\)</span>个，<span class="math inline">\(k=1,2,\cdots,K,H_t(T)\)</span>为叶节点上的经验熵，<span class="math inline">\(\alpha\geq0\)</span>为参数，则决策树损失函数定义为 <span class="math display">\[
+C_a(T)=\sum\limits^{|T|}_{t=1}{N_tH_t(T)+\alpha|T|}\\其中经验熵为:H_t(T)=-\sum_k\frac{N_{tk}}{N_t}\log\frac{N_{tk}}{N_t}\\简写为：C_\alpha(T)=C(T)+\alpha|T|
+\]</span> <span class="math inline">\(C(T)\)</span>表示模型对讯联数据的预测误差，|T|表示模型复杂程度，<span class="math inline">\(\alpha\)</span>用来控制模型复杂度和准确度之间的影响；</p>
+<h2 id="算法-1">算法</h2>
+<ol type="1">
+<li>计算出每个节点的经验熵；</li>
+<li>递归的从树的叶节点向上回缩；设一组叶节点回缩到其父节点之前与之后的整体树分别为<span class="math inline">\(T_B\)</span>与<span class="math inline">\(T_A\)</span>,其对应的损失函数值分别为<span class="math inline">\(C_a(T_B)\)</span>与<span class="math inline">\(C_a(T_A)\)</span>，如果<span class="math inline">\(C_a(T_A)\leq C_a(T_B)\)</span>则进行剪枝，将父节点变为新的叶节点；</li>
+<li>返回2，知道不能继续为止，得到损失函数最小的子树<span class="math inline">\(T_\alpha\)</span>;</li>
+</ol>
+<p><strong>注意，只需要考虑两个数的损失函数的差，其计算可以再局部进行。所以决策树的剪枝算法可以由一种动态规划算法来实现</strong></p>
+<h1 id="cart算法">CART算法</h1>
+<h2 id="cart生成">CART生成</h2>
+<h3 id="回归树">回归树</h3>
+<p>递归的构建二叉树，对回归树用平方误差最小化准则，对分类树使用基尼指数最小化准则，生成二叉树；</p>
+<p>定义两个区域： <span class="math display">\[
+R_1(j,s)=\{x|x^{(j)}\leq s\}，R_2(j,s)=\{x|x^{(j)}&gt; s\}，
+\]</span> 寻找最优切分变量<span class="math inline">\(j\)</span>和最优切分点<span class="math inline">\(s\)</span>,即求解 <span class="math display">\[
+\min\limits_{j,s}[\min\limits_{c_1}\sum\limits_{x_i\in R_1(j,s)}{(y_i-c_1)^2} +\min\limits_{c_2}\sum\limits_{x_i\in R_2(j,s)}{(y_i-c_2)^2} ]
+\]</span> 对固定的输入变量<span class="math inline">\(j\)</span>可以找到最优切分点<span class="math inline">\(s\)</span> <span class="math display">\[
+\hat c_1 = ave(y_i|x_i\in R_1(j,s)),\hat c_2 = ave(y_i|x_i\in R_2(j,s))
+\]</span> 遍历所有输入变量，找到切分点构成一对<span class="math inline">\((j,s)\)</span>.依此将输入空间划分成两个区域，紧接着重复划分，到满足停止条件；这样就得到了一棵回归树，这样的称为最小二乘回归树；</p>
+<p><strong>算法</strong></p>
+<ol type="1">
+<li>选择最优切分变量<span class="math inline">\(j\)</span>与切分点<span class="math inline">\(s\)</span>,求解</li>
+</ol>
+<p><span class="math display">\[
+\min\limits_{j,s}[\min\limits_{c_1}\sum\limits_{x_i\in R_1(j,s)}{(y_i-c_1)^2} +\min\limits_{c_2}\sum\limits_{x_i\in R_2(j,s)}{(y_i-c_2)^2} ]
+\]</span></p>
+<p>找到使之最小的一组解<span class="math inline">\((j,s)\)</span></p>
+<ol start="2" type="1">
+<li>用选定的对<span class="math inline">\((j,s)\)</span>划分区域并决定对应的输出值：</li>
+</ol>
+<p><span class="math display">\[
+\hat c_m=\frac1{N_m}\sum\limits_{s_i\in R_m(j,x)}y_i,\,x\in R_m,\,\,m=1,2
+\]</span></p>
+<ol start="3" type="1">
+<li>继续对两个区域调用步骤1,2，直至满足停止条件</li>
+<li>将输入控件划分成<span class="math inline">\(M\)</span>个区域，生成决策树；</li>
+</ol>
+<p><span class="math display">\[
+f(x)=\sum\limits^M_{m=1}\hat c_mI(x\in R_m)
+\]</span></p>
+<h3 id="分类树">分类树</h3>
+<p><strong>基尼指数定义</strong></p>
+<p>分类问题中，假设有k个类，样本点属于第k类的概率为概率为<span class="math inline">\(p_k\)</span>,对于给定的样本集合<span class="math inline">\(D\)</span>,其基尼指数为 <span class="math display">\[
+Gini(p)=1-\sum\limits^K_{k=1}p^2_k
+\]</span> 在特征A的条件下，集合D的基尼指数定义为 <span class="math display">\[
+Gini(D,A)=\frac{|D_1|}{|D|}Gini(D_1)+\frac{|D_2|}{|D|}Gini(D_2)
+\]</span> 基尼指数<span class="math inline">\(Gini(D)\)</span>表示集合<span class="math inline">\(D\)</span>的不确定性，基尼指数<span class="math inline">\(Gini(D,A)\)</span>表示经过类<span class="math inline">\(A=a\)</span>分割后集合<span class="math inline">\(D\)</span>的不确定性；基尼指数越大，不确定性就越大</p>
+<p><img src="/8ddc7426/基尼指数_熵_分类误差率.png"></p>
+<p><strong>算法</strong></p>
+<ol type="1">
+<li><p>设节点的训练数据集为<span class="math inline">\(D\)</span>,计算现有特征对该数据及的基尼指数。对每一个特征<span class="math inline">\(A\)</span>,其可能的每个取值<span class="math inline">\(a\)</span>根据样本点对<span class="math inline">\(A=a\)</span>测试为“是”或”否“将<span class="math inline">\(D\)</span>分割为<span class="math inline">\(D_1,D_2\)</span>两部分,计算<span class="math inline">\(A=a\)</span>时<span class="math inline">\(Gini(D,A)\)</span>；</p></li>
+<li><p>在所有可能的特征<span class="math inline">\(A\)</span>以及它们所有可能的切分点<span class="math inline">\(a\)</span>中选择基尼指数最小的特征及其切分点；并生成两个子节点。将现有的数据集依据特征分配到两个子节点中；</p></li>
+<li><p>对两个子节点递归的调用1,2;</p></li>
+<li><p>生成CART决策树；</p></li>
+</ol>
+<h2 id="cart剪枝">CART剪枝</h2>
+<p><strong>原理</strong></p>
+<p>定义子树的损失函数： <span class="math display">\[
+C_\alpha(T)=C(T)+\alpha|T|
+\]</span> 具体的，从整体<span class="math inline">\(T_0\)</span>,开始剪枝，对<span class="math inline">\(T_0\)</span>的任意内部节点<span class="math inline">\(t\)</span>,以<span class="math inline">\(t\)</span>为单节点树的损失函数为 <span class="math display">\[
+C_\alpha(t) = C(t)+\alpha
+\]</span> 以<span class="math inline">\(t\)</span>为根节点的子树<span class="math inline">\(T_t\)</span>的损失函数为 <span class="math display">\[
+C_\alpha(T_t)=C(T_t)+\alpha|T_t|
+\]</span> 通过上面式易得，<span class="math inline">\(\alpha=\frac{C(t)-C(T_t)}{|T_t|-1}\)</span>为剪枝的零界点，此时虽然二者有相同的损失函数，但<span class="math inline">\(t\)</span>比<span class="math inline">\(T_t\)</span>结点少，因此应该剪枝；</p>
+<p>为此对<span class="math inline">\(T_0\)</span>中的每一个内部节点<span class="math inline">\(t\)</span>计算 <span class="math display">\[
+g(t)=\frac{C(t)-C(T_t)}{|T_t-1|}
+\]</span> 表示剪枝后整体损失函数减小的程度.在<span class="math inline">\(T_0\)</span>中减去<span class="math inline">\(g(t)\)</span>最小的<span class="math inline">\(T_t\)</span>,将得到的子树作为<span class="math inline">\(T_t\)</span>,将得到的子树作为<span class="math inline">\(T_1\)</span>，同时将最小的<span class="math inline">\(g(t)\)</span>设为<span class="math inline">\(\alpha_1\)</span>.<span class="math inline">\(T_1\)</span>为区间<span class="math inline">\([\alpha_1,\alpha_2)\)</span>的最优子树。如此不断剪枝直到根节点；期间不断产生新的<span class="math inline">\(\alpha\)</span>,并产生新的区间；</p>
+<p><strong>在得到的子树序列中使用交叉验证发求得最优子树<span class="math inline">\(T_\alpha\)</span></strong></p>
+<p>具体的，利用独立的验证数据集，测试子树序列中的各个子树的平方误差或基尼指数。寻找对应指数最小的子树，同时子树确定也就意味着独影的<span class="math inline">\(\alpha_k\)</span>确定；</p>
+<hr>
+<p><strong>算法</strong></p>
+<ol type="1">
+<li><p>设<span class="math inline">\(k=0,T=T_0\)</span>;</p></li>
+<li><p>设<span class="math inline">\(\alpha=+\infty;\)</span></p></li>
+<li><p>自上而下的对各内部节点<span class="math inline">\(t\)</span>计算<span class="math inline">\(C(T_1),|T_t|\)</span>以及</p></li>
+</ol>
+<p><span class="math display">\[
+g(t)=\frac{C(t)-C(T_t)}{|T_t|-1} \,,\alpha=\min(\alpha,g(t))
+\]</span></p>
+<p>这里，<span class="math inline">\(T_t\)</span>表示以<span class="math inline">\(t\)</span>为根节点的子树，<span class="math inline">\(C(T_t)\)</span>是对训练数据集的预测误差，<span class="math inline">\(|T_t|\)</span>是<span class="math inline">\(T_t\)</span>的叶节点个数；</p>
+<ol start="4" type="1">
+<li>对<span class="math inline">\(g(t)=\alpha\)</span>的内部节点<span class="math inline">\(t\)</span>进行剪枝，并对叶节点<span class="math inline">\(t\)</span>以多数表决的方法确定其类，得到树<span class="math inline">\(T\)</span>;</li>
+<li>设<span class="math inline">\(k=k+1,\alpha_k=\alpha,T_k=T\)</span>;</li>
+<li>如果<span class="math inline">\(T_k\)</span>不是由根节点及两个叶节点构成的树，则回退到步骤2；否则令<span class="math inline">\(T_k=T_n\)</span>;</li>
+<li>采用交叉验证法在子树序列<span class="math inline">\(T_0,T_1,\cdots,T_n\)</span>中选取最优子树<span class="math inline">\(T_\alpha\)</span>;</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <div>
+      
+        ﻿<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+      
+    </div>
+        <div class="reward-container">
+  <div>作者将会持续总结、分享，如果愿意支持作者，作者将会十分感激！！！</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="Gonlnib 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="Gonlnib 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
+
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E6%A6%82%E7%8E%87%E8%AE%BA/" rel="tag"><i class="fa fa-tag"></i> 概率论</a>
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+              <a href="/tags/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 统计学习</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/f77f0066/" rel="prev" title="朴素贝叶斯">
+      <i class="fa fa-chevron-left"></i> 朴素贝叶斯
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/dff65b00/" rel="next" title="k近邻法">
+      k近邻法 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
   window.addEventListener('tabs:register', () => {
     let activeClass = CONFIG.comments.activeClass;
     if (CONFIG.comments.storage) {
@@ -18,7 +554,178 @@
       localStorage.setItem('comments_active', commentClass);
     });
   }
-</script></div><div class="toggle sidebar-toggle"><span class="toggle-line toggle-line-first"></span><span class="toggle-line toggle-line-middle"></span><span class="toggle-line toggle-line-last"></span></div><aside class="sidebar"><div class="sidebar-inner"><ul class="sidebar-nav motion-element"><li class="sidebar-nav-toc"> 文章目录</li><li class="sidebar-nav-overview"> 站点概览</li></ul><div class="post-toc-wrap sidebar-panel"><div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#核心原理"><span class="nav-text">核心原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#特征选择"><span class="nav-text">特征选择</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#信息增益"><span class="nav-text">信息增益</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#熵"><span class="nav-text">熵</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#算法"><span class="nav-text">算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#信息增益比"><span class="nav-text">信息增益比</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#决策树生成"><span class="nav-text">决策树生成</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#id3算法"><span class="nav-text">ID3算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#c4.5的生成算法"><span class="nav-text">C4.5的生成算法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#决策树剪枝"><span class="nav-text">决策树剪枝</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#原理"><span class="nav-text">原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#算法-1"><span class="nav-text">算法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#cart算法"><span class="nav-text">CART算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#cart生成"><span class="nav-text">CART生成</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#回归树"><span class="nav-text">回归树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分类树"><span class="nav-text">分类树</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cart剪枝"><span class="nav-text">CART剪枝</span></a></li></ol></li></ol></div></div><div class="site-overview-wrap sidebar-panel"><div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person"> <img class="site-author-image" itemprop="image" alt="Gonlnib" src="/images/logo.png"><p class="site-author-name" itemprop="name">Gonlnib</p><div class="site-description" itemprop="description">Gonlnib 的个人博客，主要内容会涉及一些学习记录、思考、理解，也会有一些个人爱好的展示</div></div><div class="site-state-wrap motion-element"><nav class="site-state"><div class="site-state-item site-state-posts"> <a href="/archives/"><span class="site-state-item-count">5</span> <span class="site-state-item-name">日志</span></a></div><div class="site-state-item site-state-categories"> <a href="/categories/"><span class="site-state-item-count">2</span> <span class="site-state-item-name">分类</span></a></div><div class="site-state-item site-state-tags"> <a href="/tags/"><span class="site-state-item-count">3</span> <span class="site-state-item-name">标签</span></a></div></nav></div></div></div></aside><div id="sidebar-dimmer"></div></div></main><footer class="footer"><div class="footer-inner"><div class="copyright"> &copy; 2019 – <span itemprop="copyrightYear">2020</span><span class="with-love"><i class="fa fa-user"></i></span> <span class="author" itemprop="copyrightHolder">gonlnib</span> <span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-area-chart"></i></span> <span class="post-meta-item-text">站点总字数：</span> <span title="站点总字数">19k</span></div><div class="busuanzi-count"><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span class="post-meta-item" id="busuanzi_container_site_uv" style="display:none"><span class="post-meta-item-icon"><i class="fa fa-user"></i></span><span class="site-uv" title="总访客量"><span id="busuanzi_value_site_uv"></span></span></span> <span class="post-meta-divider">|</span><span class="post-meta-item" id="busuanzi_container_site_pv" style="display:none"><span class="post-meta-item-icon"><i class="fa fa-eye"></i></span><span class="site-pv" title="总访问量"><span id="busuanzi_value_site_pv"></span></span></span></div></div></footer></div><script color="0,0,0" opacity="1" zindex="-1" count="199" src="//cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-nest@latest/canvas-nest.min.js"></script><script src="/lib/anime.min.js"></script><script src="/lib/velocity/velocity.min.js"></script><script src="/lib/velocity/velocity.ui.min.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/pisces.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script><script src="/js/local-search.js"></script><script type="text/x-mathjax-config">
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#核心原理"><span class="nav-text">核心原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#特征选择"><span class="nav-text">特征选择</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#信息增益"><span class="nav-text">信息增益</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#熵"><span class="nav-text">熵</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#算法"><span class="nav-text">算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#信息增益比"><span class="nav-text">信息增益比</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#决策树生成"><span class="nav-text">决策树生成</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#id3算法"><span class="nav-text">ID3算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#c4.5的生成算法"><span class="nav-text">C4.5的生成算法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#决策树剪枝"><span class="nav-text">决策树剪枝</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#原理"><span class="nav-text">原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#算法-1"><span class="nav-text">算法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#cart算法"><span class="nav-text">CART算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#cart生成"><span class="nav-text">CART生成</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#回归树"><span class="nav-text">回归树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分类树"><span class="nav-text">分类树</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cart剪枝"><span class="nav-text">CART剪枝</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Gonlnib"
+      src="/images/logo.png">
+  <p class="site-author-name" itemprop="name">Gonlnib</p>
+  <div class="site-description" itemprop="description">Gonlnib 的个人博客，主要内容会涉及一些学习记录、思考、理解，也会有一些个人爱好的展示</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">gonlnib</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">19k</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,0' opacity='1' zIndex='-1' count='199' src="//cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-nest@latest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
 
   MathJax.Hub.Config({
     tex2jax: {
@@ -57,11 +764,19 @@
       element.classList.add('has-jax');
     }
   });
-</script><script>
+</script>
+<script>
   NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
     MathJax.Hub.Typeset();
   }, window.MathJax);
-</script><script>
+</script>
+
+    
+
+  
+
+
+<script>
 NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
   NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
     var GUEST = ['nick', 'mail',];
@@ -87,4 +802,7 @@ NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
     });
   }, window.Valine);
 });
-</script></body></html>
+</script>
+
+</body>
+</html>

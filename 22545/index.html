@@ -20,27 +20,27 @@
     var CONFIG = {"hostname":"binlongzhang.github.io","root":"/","scheme":"Gemini","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":"ture","color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="k近邻算法： 给定的一个训练数据集，对新的输入实例，在训练数据集中找到与该实例最的k个实例，这k个实例的多数属于某个类，就将该实例划分进入这个类中；(哲学上讲的话，有点近朱者赤近墨者黑的味道~~)  算法核心原理">
+  <meta name="description" content="在最优化问题红常常会用到拉格朗日对偶性将原始问题转化为对偶问题，通过求解对偶问题来求解原始问题，例如，最大熵模型、支持向量机等，作为基础支撑知识，在此做一个简单的总结描述；">
 <meta property="og:type" content="article">
-<meta property="og:title" content="k近邻法">
-<meta property="og:url" content="https://binlongzhang.github.io/dff65b00/index.html">
+<meta property="og:title" content="拉格朗日对偶性">
+<meta property="og:url" content="https://binlongzhang.github.io/22545/index.html">
 <meta property="og:site_name" content="Gonlnib&#39;s Blog">
-<meta property="og:description" content="k近邻算法： 给定的一个训练数据集，对新的输入实例，在训练数据集中找到与该实例最的k个实例，这k个实例的多数属于某个类，就将该实例划分进入这个类中；(哲学上讲的话，有点近朱者赤近墨者黑的味道~~)  算法核心原理">
+<meta property="og:description" content="在最优化问题红常常会用到拉格朗日对偶性将原始问题转化为对偶问题，通过求解对偶问题来求解原始问题，例如，最大熵模型、支持向量机等，作为基础支撑知识，在此做一个简单的总结描述；">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://binlongzhang.github.io/dff65b00/Lp%E8%B7%9D%E7%A6%BB%E9%97%B4%E7%9A%84%E5%85%B3%E7%B3%BB.png">
-<meta property="og:image" content="https://binlongzhang.github.io/dff65b00/kd%E6%A0%91%E7%A4%BA%E4%BE%8B.png">
-<meta property="og:image" content="https://binlongzhang.github.io/dff65b00/kd%E6%A0%91%E6%90%9C%E7%B4%A2.png">
-<meta property="article:published_time" content="2020-02-09T14:32:11.376Z">
-<meta property="article:modified_time" content="2020-02-17T03:40:35.407Z">
+<meta property="og:image" content="https://binlongzhang.github.io/22545/KKT%E6%9D%A1%E4%BB%B6.png">
+<meta property="article:published_time" content="2020-02-18T05:30:46.000Z">
+<meta property="article:modified_time" content="2020-02-18T07:10:29.511Z">
 <meta property="article:author" content="Gonlnib">
 <meta property="article:tag" content="攻克&#39;小蓝书&#39;">
 <meta property="article:tag" content="原理">
 <meta property="article:tag" content="学习笔记">
-<meta property="article:tag" content="k近邻">
+<meta property="article:tag" content="拉格朗日对偶性">
+<meta property="article:tag" content="数学基础">
+<meta property="article:tag" content="最优化">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://binlongzhang.github.io/dff65b00/Lp%E8%B7%9D%E7%A6%BB%E9%97%B4%E7%9A%84%E5%85%B3%E7%B3%BB.png">
+<meta name="twitter:image" content="https://binlongzhang.github.io/22545/KKT%E6%9D%A1%E4%BB%B6.png">
 
-<link rel="canonical" href="https://binlongzhang.github.io/dff65b00/">
+<link rel="canonical" href="https://binlongzhang.github.io/22545/">
 
 
 <script id="page-configurations">
@@ -52,7 +52,7 @@
   };
 </script>
 
-  <title>k近邻法 | Gonlnib's Blog</title>
+  <title>拉格朗日对偶性 | Gonlnib's Blog</title>
   
 
 
@@ -193,7 +193,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://binlongzhang.github.io/dff65b00/">
+    <link itemprop="mainEntityOfPage" href="https://binlongzhang.github.io/22545/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/logo.png">
@@ -206,27 +206,25 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          k近邻法
+          拉格朗日对偶性
         </h1>
 
         <div class="post-meta">
 
+          
+          	<i class="fa fa-thumb-tack"></i>
+          	<font color=7D26CD>置顶</font>
+          	<span class="post-meta-divider">|</span>
           
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2020-02-09 22:32:11" itemprop="dateCreated datePublished" datetime="2020-02-09T22:32:11+08:00">2020-02-09</time>
+              <time title="创建时间：2020-02-18 13:30:46 / 修改时间：15:10:29" itemprop="dateCreated datePublished" datetime="2020-02-18T13:30:46+08:00">2020-02-18</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-02-17 11:40:35" itemprop="dateModified" datetime="2020-02-17T11:40:35+08:00">2020-02-17</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -247,7 +245,7 @@
 
           
           <br>
-            <span id="/dff65b00/" class="post-meta-item leancloud_visitors" data-flag-title="k近邻法" title="阅读次数">
+            <span id="/22545/" class="post-meta-item leancloud_visitors" data-flag-title="拉格朗日对偶性" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -269,8 +267,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/dff65b00/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/dff65b00/" itemprop="commentCount"></span>
+    <a title="valine" href="/22545/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/22545/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -280,8 +278,9 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>2.1k</span>
+              <span>2k</span>
             </span>
+            <div class="post-description">在最优化问题红常常会用到拉格朗日对偶性将原始问题转化为对偶问题，通过求解对偶问题来求解原始问题，例如，最大熵模型、支持向量机等，作为基础支撑知识，在此做一个简单的总结描述；</div>
 
         </div>
       </header>
@@ -292,78 +291,52 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <blockquote>
-<p>k近邻算法：</p>
-<p>给定的一个训练数据集，对新的输入实例，在训练数据集中找到与该实例最的k个实例，这k个实例的多数属于某个类，就将该实例划分进入这个类中；(哲学上讲的话，有点近朱者赤近墨者黑的味道~~)</p>
-</blockquote>
-<h2 id="算法核心原理">算法核心原理</h2>
+        <h1 id="原始问题">原始问题</h1>
+<p>假设<span class="math inline">\(f(x),c_i(x),h_j(x)\)</span>是定义在<span class="math inline">\(R^n\)</span>上连续可微函数，最优化问题 <span class="math display">\[
+\min_{x\in R^n}\quad f(x)\\
+s.t \quad c_j\leq0,\quad i=1,2,\cdots,k\\
+h_j(x)=0,\quad j= 1,2,\cdots,l \tag{1}
+\]</span> 引入广义拉格朗日函数 <span class="math display">\[
+L(x,\alpha,\beta)=f(x)+\sum^k_{i=1}\alpha_ic_i(x)+\sum^l_{j=1}\beta_jh_j(x)
+\]</span> 其中，<span class="math inline">\(\alpha_i,\beta_j\)</span>是拉格朗日乘子，<span class="math inline">\(\alpha_i\geq 0\)</span>,考虑<span class="math inline">\(x\)</span>的函数： <span class="math display">\[
+\theta_p(x)\quad=\max_{\alpha,\beta:\alpha_i\geq0}\quad L(x,\alpha,\beta)
+\]</span> 这里，下表P表示原始问题；假设给定某个x，如果违反原始问题的约束条件，就有 <span class="math display">\[
+\theta_p(x)\quad=\max_{\alpha,\beta:\alpha_i\geq0}\quad L(x,\alpha,\beta)=+\infty
+\]</span> 因为若某个i使约束<span class="math inline">\(c_i(x)&gt;0\)</span>,则可令<span class="math inline">\(\alpha_i\rightarrow+\infty\)</span>,若某个j使<span class="math inline">\(h_j(x)\neq 0\)</span>则可令<span class="math inline">\(\beta_i\rightarrow+\infty\)</span>,而将其余的<span class="math inline">\(\alpha_i,\beta_i\)</span>均设为0；因此 <span class="math display">\[
+\theta_p(x)=\begin{cases} 
+f(x),x满足原始问题约束\\
++\infty,其他\\
+\end{cases}
+\]</span> 因此考虑极小化问题 <span class="math display">\[
+\min_x\theta_p(x)=\min_x\,\max_{\alpha,\beta:\alpha_i\geq0}\,L(x,\alpha,\beta)
+\]</span> 他和（1）是等价的；问题<span class="math inline">\(\min_x\,\max_{\alpha,\beta:\alpha_i\geq0}\,L(x,\alpha,\beta)\)</span>称为广义拉格朗日函数的极小极大问题，这样就把原始最优化问题表示为广义拉格朗日函数的极小极大值问题。为了方便定义原始问题的最优解 <span class="math display">\[
+p^*=\min_x\theta_p(x)
+\]</span> 称为原始问题的值；</p>
+<h1 id="对偶问题">对偶问题</h1>
+<p>定义 <span class="math display">\[
+\theta_D(\alpha,\beta) = \min_xL(x,\alpha,\beta)
+\]</span> 再考虑极大化<span class="math inline">\(\theta_D(\alpha,\beta)\)</span>,即 <span class="math display">\[
+\max_{\alpha,\beta:\alpha\geq0}\theta_D(\alpha,\beta)= \max_{\alpha,\beta:\alpha\geq0}\min_xL(x,\alpha,\beta)
+\]</span> 称为广义拉格朗日函数的极大极小问题；</p>
+<p>于是广义拉格朗日函数的极大极小问题表示为约束优化问题： <span class="math display">\[
+\max_{\alpha,\beta:\alpha\geq0}\theta_D(\alpha,\beta)= \max_{\alpha,\beta:\alpha\geq0}\min_xL(x,\alpha,\beta)\\
+s.t. \alpha_i\geq0,i=1,2,\cdots,k
+\]</span> 称为原始问题的对偶问题，定义对偶问题最优值 <span class="math display">\[
+d^*=\max_{\alpha,\beta:\alpha\geq0}\theta_D(\alpha,\beta)
+\]</span> 称为对偶问题的值；</p>
+<h1 id="原始问题和对偶问题的关系">原始问题和对偶问题的关系</h1>
 <ul>
-<li><p>根据给定的<strong>距离度量</strong>，在训练数据集<em>T</em>中找出与<em>x</em>最近邻的<em>k</em>个点，涵盖这<em>k</em>个点的邻域记为</p>
-<p><span class="math inline">\(N_{k}(x)\)</span>;</p></li>
-<li><p>在<span class="math inline">\(N_{k}(x)\)</span>中根据<strong>分类决策规则</strong>决定<span class="math inline">\(x\)</span>的类别<span class="math inline">\(Y\)</span>; <span class="math display">\[
-Y= arg\max \sum_{x_i\in N_{k}(x)}I(y_{i}=c_{j}),i=1,2 \ldots,N;j=1,2 \ldots,K;\\其中I为指示函数；即y_i=c_j时I为1，否则为I为0；
-\]</span> <strong><em>k近邻没有显示的学习过程</em></strong></p></li>
-</ul>
-<h2 id="k近邻模型">k近邻模型</h2>
-<p>k近邻算法使用的模型实际上 对应于特征空间的划分；模型有三个基本要</p>
+<li><p>若原始问题和对偶问题都有最优解，则<span class="math inline">\(d^*\leq p^*\)</span>；</p>
 <ul>
-<li>度量距离</li>
-<li>k值的选择</li>
-<li>分类决策的规则</li>
-</ul>
-<h3 id="距离度量">距离度量</h3>
-<p>将设特征空间<span class="math inline">\(X\)</span>是<span class="math inline">\(n\)</span>维实数向量空间<span class="math inline">\(R^n\)</span>,<span class="math inline">\(x_i,x_j\in X,x_i=(x_i^{(1)},x_i^{(2)},\cdots,x_i^{(n)})^T,x_j=(x_j^{(1)},x_j^{(2)},\cdots,x_j^{(n)})^T,x_i,x_j的L_p距离定义为\)</span> <span class="math display">\[
-L_p(x_I,x_j)=(\sum^n_{l=1}|x_i^{(l)}-x_j^{(l)}|)^{\frac1p}
-\]</span> 其中<span class="math inline">\(P\geq 1\)</span></p>
-<ul>
-<li><span class="math inline">\(p=1\)</span>称为曼哈顿距离</li>
-<li><span class="math inline">\(p=2\)</span>称为欧氏距离</li>
-<li><span class="math inline">\(p=\infty\)</span>时，他是各个坐标距离的最大值</li>
-</ul>
-<p>如图</p>
-<p><img src="/dff65b00/Lp距离间的关系.png"></p>
-<h3 id="k值的选择">k值的选择</h3>
-<ul>
-<li><p>k值小，预测结果对近邻实例点非常敏感，而且k值减小模型就会变得复杂而且容易发生过拟合；</p></li>
-<li><p>k值大，学习的近似误差会增大，也就意味这模型会变得简单；</p>
-<p><strong>通常采用交叉验证发来选取最优k值</strong></p></li>
-</ul>
-<h3 id="分类决策规则">分类决策规则</h3>
-<p>k近邻法的分类决策规则往往是多数表决；</p>
-<p>如果分类损失函数为0-1损失函数，分类函数为 <span class="math display">\[
-f:R^n \to \{c_1,c_2,\cdots,c_k\}
-\]</span> 那么误分类的概率 <span class="math display">\[
-P(Y\neq f(X)) = 1-P(Y=f(X))
-\]</span> 对于给定的实例<span class="math inline">\(x\in X\)</span>,其最近邻的<span class="math inline">\(k\)</span>个训练实例点构成的集合<span class="math inline">\(N_k(x)\)</span>,如果覆盖<span class="math inline">\(N_k(x)\)</span>的区域类别为<span class="math inline">\(c_j\)</span>,那么误分类 <span class="math display">\[
-\frac1k\sum_{x_i\in N_k(x)} = 1-\frac1k\sum_{x_i\in N_k(x)}I(y_i=c_j)
-\]</span> 使得误分类概率最小就是经验风险最小，也就是<span class="math inline">\(\frac1k\sum_{x_i\in N_k(x)}I(y_i=c_j)\)</span>最大；也就是说多数表决规则等价于经验风险最小化；</p>
-<h2 id="k近邻算法实现kd树">K近邻算法实现：kd树</h2>
-<p>由于实现k近邻算法要对已划分数据进行搜算，数据量大时会耗费大量时间，因此有很多优化提高效率的算法；dk树就是其中的一种</p>
-<h3 id="构造kd树">构造kd树</h3>
-<ol type="1">
-<li>构造根节点，根节点对应于包含<span class="math inline">\(T\)</span>的k维空间的超矩形区域；</li>
-<li>选择<span class="math inline">\(x^{(1)}\)</span>为坐标轴，以<span class="math inline">\(T\)</span>中所有实例的<span class="math inline">\(x^{(1)}\)</span>坐标的中位数为切分点，将根节点对应的超矩形区域切分为两个子区域；切分由通过切分点并与坐标轴<span class="math inline">\(x^{(1)}\)</span>垂直的超平面实现；左子节点存放对应坐标小于切分点的点、右边存放大于切分点的，根节点保存出与切分平面上的点；</li>
-<li>重复：对于深度为j的节点，选择<span class="math inline">\(x^{(l)}\)</span>为切分的坐标轴，<span class="math inline">\(l=j(mod\,k)+1\)</span>,以该节点的区域中所有实例的<span class="math inline">\(x^{(l)}\)</span>坐标的中位数为切分点，再次进行与（2）中类似的划分；</li>
-<li>直到两个子区域没有实例存在时停止，从而形成<span class="math inline">\(kd\)</span>树的区域划分；</li>
-</ol>
-<p>图示如下</p>
-<p><img src="/dff65b00/kd树示例.png"></p>
-<h3 id="搜索kd树">搜索kd树</h3>
-<p>包含目标点的叶节点对应的包含目标点的最小超矩形区域。以此叶节点的实例点作为当前最近点。目标点的最邻近点一定在以目标点为中心并通过当前最近点的超群体内部。然后返回当前节点的父节点，如果父节点的另一子节点的超矩形区域与超球体相交，那么在相交区域内寻找与目标结点最近的点。如果存在，将此作为新的最近点。算法转到更上一级父节点继续上述过程；如果父节点另一子节点的超矩形区域与超球体不相交，或不存在比当前最近点更近点则停止操作；</p>
-<ol type="1">
-<li>在kd树中找出包含目标点x的叶节点：从根节点出发递归的向下方位，直到子节点为叶节点为止；</li>
-<li>以此叶节点为“当前最近点”；</li>
-<li>递归的向上回退，在每个节点执行下述操作
-<ul>
-<li>如果该节点保存的实例点比当前最近点距离目标更近，则该实例点为“当前最近点”；</li>
-<li>当前最近点一定位于该节点一个子节点对应的区域，检查该子节点的父节点的另一个子节点对应的区域是否有更近的点，有则确认零一点为最近点----具体可检查另一子节点对应区域是否以目标点为球心、以当前最小距离为半径的超球体相交；</li>
-<li>不相交则向上回退；</li>
+<li>推论：设<span class="math inline">\(x^*，\alpha^*,\beta^*\)</span>分别为原始问题和对偶问题的可行解，并且<span class="math inline">\(d^*=p^*\)</span>,则<span class="math inline">\(x^*，\alpha^*,\beta^*\)</span>分别是原始问题和对偶问题的最优解；</li>
 </ul></li>
-<li>回退到根节点，搜索结束；</li>
-</ol>
-<p>图示如下</p>
-<p><img src="/dff65b00/kd树搜索.png"></p>
-<p><strong><span class="math inline">\(kd\)</span>树搜索平均计算复杂度是<span class="math inline">\(O(log\,N)\)</span>,<span class="math inline">\(N\)</span>为训练实例数。kd树适合用于训练实例数远大于空间维数时的k紧邻搜索。二者接近时，<span class="math inline">\(kd\)</span>树效率会迅速下降，几乎线性扫描；</strong></p>
+<li><p>假设<span class="math inline">\(f(x),c_i(x)\)</span>是凸函数，<span class="math inline">\(h_j(x)\)</span>是仿射函数；并且假设不等式约束<span class="math inline">\(c_i(x)\)</span>是严格可行的(存在x，对所有的i有<span class="math inline">\(c_i{(x)}\leq0\)</span>),则存在<span class="math inline">\(x^*，\alpha^*,\beta^*\)</span>,使<span class="math inline">\(x^*\)</span>是原始问题的解，<span class="math inline">\(\alpha^*,\beta^*\)</span>是对偶问题的解，且 <span class="math display">\[
+p^*=d^*=L(x^*，\alpha^*,\beta^*)
+\]</span></p></li>
+<li><p>假设<span class="math inline">\(f(x),c_i(x)\)</span>是凸函数，<span class="math inline">\(h_j(x)\)</span>是仿射函数；并且假设不等式约束<span class="math inline">\(c_i(x)\)</span>是严格可行的,则存在<span class="math inline">\(x^*，\alpha^*,\beta^*\)</span>分别是原始问题和对偶问题的解的充分必要条件是<span class="math inline">\(x^*，\alpha^*,\beta^*\)</span>满足下面的（KKT）条件：</p></li>
+</ul>
+<p><img src="/22545/KKT条件.png"></p>
+<p>​ 特别指出，式（c.22）称为KKT的对偶互补条件，由此条件可知：若<span class="math inline">\(a_i^*&gt;0\)</span>,则<span class="math inline">\(c_i(x^*)=0\)</span>;</p>
 
     </div>
 
@@ -411,7 +384,9 @@ P(Y\neq f(X)) = 1-P(Y=f(X))
               <a href="/tags/%E6%94%BB%E5%85%8B-%E5%B0%8F%E8%93%9D%E4%B9%A6/" rel="tag"><i class="fa fa-tag"></i> 攻克'小蓝书'</a>
               <a href="/tags/%E5%8E%9F%E7%90%86/" rel="tag"><i class="fa fa-tag"></i> 原理</a>
               <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag"><i class="fa fa-tag"></i> 学习笔记</a>
-              <a href="/tags/k%E8%BF%91%E9%82%BB/" rel="tag"><i class="fa fa-tag"></i> k近邻</a>
+              <a href="/tags/%E6%8B%89%E6%A0%BC%E6%9C%97%E6%97%A5%E5%AF%B9%E5%81%B6%E6%80%A7/" rel="tag"><i class="fa fa-tag"></i> 拉格朗日对偶性</a>
+              <a href="/tags/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/" rel="tag"><i class="fa fa-tag"></i> 数学基础</a>
+              <a href="/tags/%E6%9C%80%E4%BC%98%E5%8C%96/" rel="tag"><i class="fa fa-tag"></i> 最优化</a>
           </div>
 
         
@@ -420,13 +395,10 @@ P(Y\neq f(X)) = 1-P(Y=f(X))
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/8ddc7426/" rel="prev" title="决策树">
-      <i class="fa fa-chevron-left"></i> 决策树
+    <a href="/32703/" rel="prev" title="logistic回归&最大熵模型">
+      <i class="fa fa-chevron-left"></i> logistic回归&最大熵模型
     </a></div>
-      <div class="post-nav-item">
-    <a href="/280b588e/" rel="next" title="支持向量机">
-      支持向量机 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -487,7 +459,7 @@ P(Y\neq f(X)) = 1-P(Y=f(X))
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#算法核心原理"><span class="nav-text">算法核心原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#k近邻模型"><span class="nav-text">k近邻模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#距离度量"><span class="nav-text">距离度量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#k值的选择"><span class="nav-text">k值的选择</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分类决策规则"><span class="nav-text">分类决策规则</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#k近邻算法实现kd树"><span class="nav-text">K近邻算法实现：kd树</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#构造kd树"><span class="nav-text">构造kd树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#搜索kd树"><span class="nav-text">搜索kd树</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#原始问题"><span class="nav-text">原始问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#对偶问题"><span class="nav-text">对偶问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#原始问题和对偶问题的关系"><span class="nav-text">原始问题和对偶问题的关系</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

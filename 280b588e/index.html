@@ -28,8 +28,9 @@
 <meta property="og:description" content="引言 支持向量机（support vector machines,SVM）是一种二分类模型；它的基本模型定义在特征空间上的间隔最大模型分类器，间隔最大使之区别于感知机；同时还可以使用核技巧，使它成为非线性支持向量机；SVM的学习策略就是间隔最大化，等价于正则化的合页函数最小化；支持向量机的学习算法就是求解凸二次规划的最优化算法；">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://binlongzhang.github.io/280b588e/%E5%87%A0%E4%BD%95%E9%97%B4%E9%9A%94.png">
+<meta property="og:image" content="https://binlongzhang.github.io/280b588e/%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F.png">
 <meta property="article:published_time" content="2020-02-10T11:17:28.000Z">
-<meta property="article:modified_time" content="2020-02-17T04:02:21.257Z">
+<meta property="article:modified_time" content="2020-02-18T05:30:03.276Z">
 <meta property="article:author" content="Gonlnib">
 <meta property="article:tag" content="攻克&#39;小蓝书&#39;">
 <meta property="article:tag" content="原理">
@@ -125,7 +126,7 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">10</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">13</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -135,7 +136,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">5</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">6</span></a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -227,7 +228,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-02-17 12:02:21" itemprop="dateModified" datetime="2020-02-17T12:02:21+08:00">2020-02-17</time>
+                <time title="修改时间：2020-02-18 13:30:03" itemprop="dateModified" datetime="2020-02-18T13:30:03+08:00">2020-02-18</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -282,7 +283,7 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1.5k</span>
+              <span>3.6k</span>
             </span>
 
         </div>
@@ -338,7 +339,62 @@ f(x)=sign(w^*\cdot x+b^*)
 \gamma=\frac{\hat \gamma}{||w||}
 \]</span> 如果<span class="math inline">\(||w||=1\)</span>,那么函数间隔和几何间隔相等；</p>
 <h2 id="间隔最大化">间隔最大化</h2>
-<p><span class="math inline">\(a&#39;\)</span></p>
+<p>支持向量机的基本想法是求解能够正确划分训练数据集并且几何间隔最大的分离超平面。间隔最大化的分离超平面是唯一的，这里的间隔最大化指硬间隔最大化;</p>
+<p>间隔最大化最直观的表现对训练数据集找到几何间隔最大的超平面就意味着要以充分大的确信度对数据进行分类；</p>
+<h3 id="最大间隔分离超平面">最大间隔分离超平面</h3>
+<p>求解间隔最大的分离超平面，可以表示为下面的最优化约束问题： <span class="math display">\[
+\max_{w,b} \gamma\\
+s.t. \quad y_i(\frac {\hat w}{||w||}\cdot x_i + \frac b{||w||})\geq\gamma,\quad i = 1,2,\cdots,N
+\]</span> 表示我们希望最大化超平面<span class="math inline">\((w,b)\)</span>关于训练数据的几何间隔<span class="math inline">\(\gamma\)</span>,约束条件表示的超平面<span class="math inline">\((w,b)\)</span>关于每个训练样本点的集合间隔至少<span class="math inline">\(\gamma\)</span>;</p>
+<p>参考之前集合间隔和函数间隔的关系式，可以将其改写为 <span class="math display">\[
+\max_{w,b}\frac{\hat \gamma}{||w||}\\
+s.t. \quad y_i(w\cdot x_i + b)\geq \hat \gamma_i,\quad i=1,2,\cdots,N
+\]</span> 由于等比例的改变<span class="math inline">\(w,b,\gamma\)</span>也会成比例的变化因此他是一个等价的问题；可以取<span class="math inline">\(\hat \gamma=1\)</span>,而且注意最大化<span class="math inline">\(\frac1{||w||}\)</span>和最小化<span class="math inline">\(\frac12||w||^2\)</span>是等价的，于是就得到了下面的线性可分支持向量机的最优化问题： <span class="math display">\[
+\min_{w,b}\quad \frac12||w||^2\\
+s.t.\quad y_i(w\cdot x_i + b)-1\geq0,\quad i=1,2,\cdots,N
+\]</span> 这是一个凸二次规划问题；</p>
+<blockquote>
+<p>凸优化问题是指约束最优化问题 <span class="math display">\[
+\min_wf(w)\\
+s.t.\quad g_i(w)\leq0,\quad i=1,2,\cdots,k\\
+h_i(w)=1,\quad i=1,2,\cdots,l
+\]</span> 其中，目标函数<span class="math inline">\(f(w)\)</span>和约束函数<span class="math inline">\(g_i(w)\)</span>都是<span class="math inline">\(R^n\)</span>上的连续可微的凸函数，约束函数<span class="math inline">\(h_i(w)\)</span>是<span class="math inline">\(R^n\)</span>上的仿射函数。（<span class="math inline">\(f(x)\)</span>称为仿射函数，如果它满足<span class="math inline">\(f(x)=a\cdot x + b,a\in R^n,b\in R^n,x \in R^n\)</span>）</p>
+</blockquote>
+<p>当目标函数<span class="math inline">\(f(w)\)</span>是二次函数且约束函数<span class="math inline">\(g_i(w)\)</span>是仿射函数时，上述最优化问题变成凸二次规划问题；如果求解出了最优化问题的解<span class="math inline">\(w^*,b^*\)</span>,那么就可以得到最大间隔分离超平面<span class="math inline">\(w^*\cdot x+ b^*=0\)</span>及分类决策函数<span class="math inline">\(f(x)=sign(w^*+b^*)\)</span>，即线性可分支持向量机；</p>
+<h3 id="算法">算法</h3>
+<p>线性可分支持向量机学习算法—最大间隔法</p>
+<ol type="1">
+<li>构造并求解约束最优化问题</li>
+</ol>
+<p><span class="math display">\[
+\min_{w,b}\quad \frac12||w||^2\\ 
+s.t.\quad y_i(w\cdot x_i+b)-1\geq0,\quad i=1,2,\cdots,N \tag{1}
+\]</span></p>
+<p>​ 并求得最优解<span class="math inline">\(w^*,b^*\)</span>;</p>
+<ol start="2" type="1">
+<li>由此得到的分离超平面：</li>
+</ol>
+<p><span class="math display">\[
+w^*\cdot x + b^*=0
+\]</span></p>
+<p>​ 分类决策函数 <span class="math display">\[
+f(x)=sign(w^*\cdot x+b^*)
+\]</span> <strong>线性可分训练数据集的最大间隔分离朝平面存在唯一的</strong>；</p>
+<h3 id="支持向量和间隔边界">支持向量和间隔边界</h3>
+<p>线性可分的情况下，训练数据集的样本点中与分离超平面距离最近的样本点的实例称为支持向量（support vector）,支持向量是使 <span class="math display">\[
+y_i(w\cdot x_i+b)-1=0
+\]</span> 对<span class="math inline">\(y_i=+1\)</span>的正例点，支持向量在超平面<span class="math inline">\(H_1:w\cdot x +b =1\)</span>;</p>
+<p>对<span class="math inline">\(y_i=-1\)</span>的正例点，支持向量在超平面<span class="math inline">\(H_2:w\cdot x +b =-1\)</span>;</p>
+<p>其中<span class="math inline">\(H_1,H_2\)</span>上的点就是支持向量；</p>
+<p>注意到<span class="math inline">\(H_1,H_2\)</span>平行，没有实例点落在他们中间，它们之间的距离称为间隔，间隔依赖于分离超平面的法向量<span class="math inline">\(w\)</span>,等于<span class="math inline">\(\frac2{||w||}\)</span>,<span class="math inline">\(H_1,H_2\)</span>为间隔边界；<strong>分离超平面只有支持向量起作用，而其他实例点不会影响分离超平面；由于支持向量在确定分离超平面起到决定性的作用，因此这种分类模型叫做支持向量机，支持向量的个数一般很少，所以支持向量由”很少的重要的“训练样本确定；</strong>（支持向量机的命名）</p>
+<p><img src="/280b588e/支持向量.png"></p>
+<h3 id="学习的对偶算法">学习的对偶算法</h3>
+<p>求解线性可分支持向量机的最优化问题(1)可以作为原始最优化问题，应用拉格朗日对偶性可以通过求解对偶问题来得到原始问题的最优解；对偶问题往往更容易求解，而且自然的引入核函数，以便于推广到非线性问题；</p>
+<p>首先构建拉格朗日函数，对于每一个约束条件引入拉格朗日乘子，则： <span class="math display">\[
+L(w,b,\alpha)=\frac12||w||^2-\sum\limits^N_{i=1}a_iy_i(w\cdot x_i+b)+\sum^N_{i=1}\alpha_i
+\]</span> 根据拉格朗日对偶性，原始问题的对偶问题是极大极小问题： <span class="math display">\[
+\max_\alpha\,\min_{w,b}L(w,b,\alpha)
+\]</span></p>
 
     </div>
 
@@ -462,7 +518,7 @@ f(x)=sign(w^*\cdot x+b^*)
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#线性可分支持向量机"><span class="nav-text">线性可分支持向量机</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#函数间隔和几何间隔"><span class="nav-text">函数间隔和几何间隔</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#间隔最大化"><span class="nav-text">间隔最大化</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#线性可分支持向量机"><span class="nav-text">线性可分支持向量机</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#函数间隔和几何间隔"><span class="nav-text">函数间隔和几何间隔</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#间隔最大化"><span class="nav-text">间隔最大化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#最大间隔分离超平面"><span class="nav-text">最大间隔分离超平面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#算法"><span class="nav-text">算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#支持向量和间隔边界"><span class="nav-text">支持向量和间隔边界</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#学习的对偶算法"><span class="nav-text">学习的对偶算法</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -478,7 +534,7 @@ f(x)=sign(w^*\cdot x+b^*)
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -491,7 +547,7 @@ f(x)=sign(w^*\cdot x+b^*)
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -526,7 +582,7 @@ f(x)=sign(w^*\cdot x+b^*)
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">19k</span>
+    <span title="站点总字数">23k</span>
 </div>
 
         
@@ -678,7 +734,7 @@ NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
       meta       : guest,
       pageSize   : '10' || 10,
       visitor    : true,
-      lang       : 'zh-cn' || 'zh-cn',
+      lang       : '' || 'zh-cn',
       path       : location.pathname,
       recordIP   : false,
       serverURLs : ''

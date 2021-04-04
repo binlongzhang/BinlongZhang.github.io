@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>Anaconda</title>
+      <link href="//41489/"/>
+      <url>//41489/</url>
+      
+        <content type="html"><![CDATA[<h1 id="conda常用命令"><a class="markdownIt-Anchor" href="#conda常用命令"></a> conda常用命令</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">conda -V  #查看conda版本</span><br><span class="line">conda update conda #更新至最新的版本，也会更新相关包</span><br><span class="line"></span><br><span class="line">#查看环境管理的全部命令</span><br><span class="line">conda env -h    </span><br><span class="line"></span><br><span class="line">#显示所有已创建的环境</span><br><span class="line">conda info -e</span><br><span class="line">conda env list</span><br><span class="line"></span><br><span class="line"> #切换至某个环境中</span><br><span class="line">activate env_name</span><br><span class="line"></span><br><span class="line">#新建环境</span><br><span class="line">conda create --name your_env_name python&#x3D;3.5</span><br></pre></td></tr></table></figure><h1 id="pip常用命令"><a class="markdownIt-Anchor" href="#pip常用命令"></a> pip常用命令</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">python -m pip install --upgrade pip</span><br><span class="line">pip install packageName</span><br><span class="line">pip uninstall packageName</span><br></pre></td></tr></table></figure><h1 id="jupyter-notebooklab"><a class="markdownIt-Anchor" href="#jupyter-notebooklab"></a> Jupyter Notebook/Lab</h1><h2 id="启动"><a class="markdownIt-Anchor" href="#启动"></a> 启动</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#通过批处理脚本来启动jupyter lab</span><br><span class="line">rem -- start_jupyter_notebook.bat ---</span><br><span class="line"></span><br><span class="line">cd D:\PythonProgram\SentimentAnalysis</span><br><span class="line"></span><br><span class="line">d:</span><br><span class="line"></span><br><span class="line">call activate sentimentAnalysis</span><br><span class="line">call jupyter lab</span><br></pre></td></tr></table></figure><h2 id="基本操作"><a class="markdownIt-Anchor" href="#基本操作"></a> 基本操作</h2><ul><li><p>Jupyter Notebook有两种mode</p></li><li><ul><li>Enter：进入edit模式;</li><li>Esc：进入command模式;</li><li>command模式下按&quot;H&quot;可以查看快捷键;</li></ul></li><li><p>在Jupyter Notebook中的笔记本单元格中用英文感叹号“!”后接shell命令即可执行shell命令。</p></li></ul><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!shell命令</span><br></pre></td></tr></table></figure><ul><li>关联Jupyter Notebook和conda的环境和包——“nb_conda”</li></ul><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda install nb_conda</span><br></pre></td></tr></table></figure><h2 id="常用扩展"><a class="markdownIt-Anchor" href="#常用扩展"></a> 常用扩展</h2><ul><li><p>Jupyter Notebook无法为Markdown文档通过特定语法添加目录，因此需要通过安装扩展来实现目录的添加。</p></li><li><ul><li>安装对应扩展</li></ul></li></ul><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda install -c conda-forge jupyter_contrib_nbextensions</span><br></pre></td></tr></table></figure><ul><li><ul><li>在 “Nbextensions&quot;中勾选&quot;Table of contents”<img src="/41489/1.jpg" alt></li><li>点击图标即可显示<img src="/41489/2.jpg" alt="image"></li></ul></li><li><p>Jupyter Lab使用kite来完善代码补全的功能</p></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> tools </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Anaconda </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Git</title>
       <link href="//25246/"/>
       <url>//25246/</url>

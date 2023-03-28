@@ -4,6 +4,106 @@
   
     
     <entry>
+      <title>GCC</title>
+      <link href="//54464/"/>
+      <url>//54464/</url>
+      
+        <content type="html"><![CDATA[<h1 id="工作流程"><a class="markdownIt-Anchor" href="#工作流程"></a> 工作流程</h1><ol><li>预处理 Preprocessing</li></ol><blockquote><p>cpp预处理器，去注释，展开头文件，宏替换等<br>gcc -E test.c -o test.i</p></blockquote><ol start="2"><li>编译 Compilation</li></ol><blockquote><p>gcc，将源代码文件编译成汇编语言代码<br>gcc -S test.i -o test.s</p></blockquote><ol start="3"><li>汇编 Assembly</li></ol><blockquote><p>as, 将汇编语言代码编译成二进制文件<br>gcc -c test.s -o test.o</p></blockquote><ol start="4"><li>连接 Linking</li></ol><blockquote><p>ld, 连接test.c代码中调用的库函数<br>gcc -o test test.o</p></blockquote><h1 id="常用参数"><a class="markdownIt-Anchor" href="#常用参数"></a> 常用参数</h1><ul><li>-v 查看版本</li><li>-E 预处理</li><li>-S 生成汇编文件</li><li>-c 只编译，生成.o的目标文件</li><li>-I 指定头文件所在路径</li><li>-L 指定库文件所在路径</li><li>-l 指定库文件的名字</li><li>-o 指定生成的目标文件名字</li><li>-g 包含调试信息，使用gdb调试需要添加-g参数</li><li>-On n=0∼3 编译优化,n越大优化得越多</li><li>-Wall 提示更多警告信息</li></ul><blockquote><p>gcc -o test -Wall test.c<br>gcc -o test test.c -D MAX=10</p></blockquote><h1 id="静态库和共享动态库"><a class="markdownIt-Anchor" href="#静态库和共享动态库"></a> 静态库和共享（动态）库</h1><h2 id="static-library"><a class="markdownIt-Anchor" href="#static-library"></a> Static library</h2><blockquote><p>windows下.lib，linux下.a<br>静态库一般命名：前缀: lib + 库名称 + 后缀: .a</p></blockquote><h3 id="静态库制作流程"><a class="markdownIt-Anchor" href="#静态库制作流程"></a> 静态库制作流程</h3><ol><li>将源文件编译为.o目标文件</li><li>使用ar工具将.o文件打包为.a文件</li></ol><blockquote><p>使用ar工具需要添加参数rcs—&gt;r更新、c创建、s建立索引<br>命令：ar rcs 静态库名 .o文件</p></blockquote><p><img src="https://cdn.nlark.com/yuque/0/2023/png/1455047/1674839219459-6e36db42-e73c-46bc-9d5d-05301d8de9a8.png#averageHue=%23f7f3f3&amp;clientId=ubae4812d-8a87-4&amp;from=paste&amp;height=242&amp;id=udb103834&amp;name=image.png&amp;originHeight=242&amp;originWidth=334&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=324156&amp;status=done&amp;style=none&amp;taskId=udec50304-e736-4f4f-9258-e51d0c1a1a0&amp;title=&amp;width=334" alt="image.png"></p><h3 id="静态库使用"><a class="markdownIt-Anchor" href="#静态库使用"></a> 静态库使用</h3><blockquote><p>将.a文件和头文件一起发布给用户</p></blockquote><p>-L：指定要连接的库的所在目录<br>-l：指定链接时需要的静态库, 去掉前缀和后缀<br>-I: 指定main.c文件用到的头文件head.h所在的路径</p><blockquote><p>gcc -o main1 main.c -L./lib -l head -I./include</p></blockquote><h3 id="优缺点"><a class="markdownIt-Anchor" href="#优缺点"></a> 优缺点</h3><ul><li>优点<ul><li>函数库被打包到应用中，实现函数本地化，寻址方便，速度快</li><li>移植方便</li></ul></li><li>缺点<ul><li>系统资源消耗交大，每个进程都需要赋值一份静态库</li><li>给程序更新、部署、发布带来麻烦</li></ul></li></ul><h2 id="shared-library"><a class="markdownIt-Anchor" href="#shared-library"></a> Shared library</h2><blockquote><p>程序编译时并不会被连接到目标代码中, 而是在程序运行是才被载入. 不同的应用程序如果调用相同的库, 那么在内存里只需要有一份该共享库的拷贝, 规避了空间浪费问题.动态库在程序运行时才被载入, 也解决了静态库对程序的更新、部署和发布会带来麻烦. 用户只需要更新动态库即可, 增量更新<br>前缀lib + 库名称 + <a href="http://xn--fqr621h.so" target="_blank" rel="noopener">后缀.so</a></p></blockquote><h3 id="共享库制作"><a class="markdownIt-Anchor" href="#共享库制作"></a> 共享库制作</h3><ol><li>编译生成目标文件.o，加编译选项 -fPIC</li></ol><blockquote><p>gcc -fpic -c fun1.c fun2.c<br>-fpic创建与地址无关的编译程序(pic, position independent code), 目的就是为了能够在多个应用程序间共享</p></blockquote><ol start="2"><li>生成共享库，此时加连接器选项 -shared 指定生成动态链接库</li></ol><blockquote><p>gcc -shared fun1.o fun2.o -o <a href="http://libtest2.so" target="_blank" rel="noopener">libtest2.so</a></p></blockquote><h3 id="共享库使用"><a class="markdownIt-Anchor" href="#共享库使用"></a> 共享库使用</h3><p>生成可执行文件时，跟静态库方式一样<br>gcc -o main1 main.c -L./lib -l head -I./include</p><hr><p>当系统加载可执行代码时，需要知道依赖库的名字及所以来的库路径，因而需要系统的dynamic linker/loader</p><blockquote><p>ldd命令可以查看可执行的文件依赖的库文件—&gt; ldd main<br>对于elf格式的可执行程序，<a href="http://xn--ld-linux-yi5qu41j.so" target="_blank" rel="noopener">是由ld-linux.so</a>*来完成<br>其先后搜索elf文件的DT_RPATH段 --&gt; 环境变量LD_LIBRARY_PATH --&gt;  /etc/ld.so.cache文件列表 --&gt;/lib/, /usr/lib目录</p></blockquote><p><strong><em>解决方案</em></strong></p><ul><li>拷贝自己制作的共享库到/lib或者/usr/lib</li><li>临时设置LD_LIBRARY_PATH（测试）<br>- export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:库路径</li><li>永久设置, 把export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:库路径, 设置到∼/.bashrc文件中,然后<br>- 执行. ~/.bashrc使配置文件生效(第一个.后面有一个空格)<br>- 执行source ~/.bashrc配置文件生效<br>- 退出当前终端, 然后再次登陆也可以使配置文件生效</li><li>永久设置,把export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:库路径，设置到/etc/profile文件中</li><li>将其添加到 /etc/ld.so.cache文件中<br>- 编辑/etc/ld.so.conf文件, 加入库文件所在目录的路径<br>- 运行sudo ldconfig -v, 该命令会重建/etc/ld.so.cache文件</li></ul><h3 id="优缺点-2"><a class="markdownIt-Anchor" href="#优缺点-2"></a> 优缺点</h3><ul><li>优点<ul><li>省内存</li><li>部署方便，只需替换动态库，重启即可</li></ul></li><li>缺点<ul><li>加载速度较慢</li><li>移植性差，需要移植所有动态库</li></ul></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> tools </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> GCC </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Vim</title>
+      <link href="//44303/"/>
+      <url>//44303/</url>
+      
+        <content type="html"><![CDATA[<blockquote><p>帮助文档 – vimtutor</p></blockquote><h1 id="模式"><a class="markdownIt-Anchor" href="#模式"></a> 模式</h1><p><img src="https://cdn.nlark.com/yuque/0/2023/png/1455047/1674816781426-4870888f-b78f-4c56-90e0-26f8ab24a6af.png#averageHue=%23fbfbfb&amp;clientId=u46ee56d0-7d42-4&amp;from=paste&amp;height=292&amp;id=ua5397485&amp;name=image.png&amp;originHeight=292&amp;originWidth=356&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=416849&amp;status=done&amp;style=none&amp;taskId=ubd88c0a6-9d2d-4fdb-9b8e-3a845ae4bc4&amp;title=&amp;width=356" alt="image.png"></p><h1 id="基本命令"><a class="markdownIt-Anchor" href="#基本命令"></a> 基本命令</h1><h2 id="命令模式"><a class="markdownIt-Anchor" href="#命令模式"></a> 命令模式</h2><table><thead><tr><th>ZZ</th><th>保存退出</th></tr></thead><tbody><tr><td></td><td></td></tr><tr><td>gg=G</td><td>代码格式化</td></tr><tr><td>set nu</td><td>设置显示行号</td></tr><tr><td></td><td></td></tr><tr><td>k,  j,  h,  l (上,下,左,右)</td><td>光标移动</td></tr><tr><td>gg, G</td><td>光标移动到文件首、尾</td></tr><tr><td>0, $</td><td>光标移动到行首、尾</td></tr><tr><td>nG</td><td>行转跳，到n行</td></tr><tr><td></td><td></td></tr><tr><td>x, X</td><td>删除光标后/前的字符</td></tr><tr><td>dd/ndd</td><td>删除光标所在行/后n行</td></tr><tr><td>ndd</td><td>从当前光标删除n行</td></tr><tr><td>v/ctrl+v</td><td>使用h、j、k、l移动选择内容, 然后删除/编辑。其中ctrl+v是列模式, v为非列模式</td></tr><tr><td></td><td></td></tr><tr><td>u</td><td>撤销</td></tr><tr><td></td><td></td></tr><tr><td>yy/nyy</td><td>赋值当前行/n行</td></tr><tr><td>p/P</td><td>所在位置下一行/上一行粘贴</td></tr><tr><td>r/R</td><td>替换当前字符/当前行后的字符</td></tr><tr><td></td><td></td></tr><tr><td><strong>/xxxx，？xxx</strong></td><td><strong>从当前位置搜索，n/N分别向上/下</strong></td></tr><tr><td></td><td></td></tr><tr><td>i, a</td><td>光标前/后插入</td></tr><tr><td>I, A</td><td>行首/尾插入</td></tr><tr><td>o, O</td><td>光标所在行下/上创建一行</td></tr><tr><td>s, S</td><td>删除光标后/所在当前行，从当前位置/行插入</td></tr></tbody></table><h2 id="末行状态"><a class="markdownIt-Anchor" href="#末行状态"></a> 末行状态</h2><blockquote><p>命令模式下输入(:)切换至末行模式；<br>两次ESC，Backspace或回车键切回命令模式</p></blockquote><table><thead><tr><th>q/q!</th><th>退出/强制退出</th></tr></thead><tbody><tr><td>w</td><td>写入</td></tr><tr><td>wq</td><td>写入并退出</td></tr><tr><td>x</td><td>同上</td></tr><tr><td></td><td></td></tr><tr><td>😒/old/new/</td><td>光标所在行的第一个old替换为new</td></tr><tr><td>😒/old/new/g</td><td>光标所在行的所有old替换为new</td></tr><tr><td>:%s/old/new/g</td><td>当前文件的所有old替换为new</td></tr><tr><td>:%s/old/new/gc</td><td>同上，但是每次替换需要用户确认</td></tr><tr><td></td><td></td></tr><tr><td>ctrl + u/d/f/b</td><td>向下/上/前/后翻页</td></tr><tr><td>!shell 命令</td><td>末行模式下执行shell命令</td></tr></tbody></table><h2 id="vim配置文件"><a class="markdownIt-Anchor" href="#vim配置文件"></a> Vim配置文件</h2><ul><li>用户级别配置文件 ~/.vimrc</li><li>系统级别配置文件 /etc/vim/vimrc</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> tools </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Vim </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Makefile</title>
+      <link href="//978/"/>
+      <url>//978/</url>
+      
+        <content type="html"><![CDATA[<h1 id="基本规则"><a class="markdownIt-Anchor" href="#基本规则"></a> 基本规则</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">目标: 依赖</span><br><span class="line">(tab)命令</span><br><span class="line"></span><br><span class="line"><span class="comment"># 目标： 生成的目标文件</span></span><br><span class="line"><span class="comment"># 依赖： 目标文件由哪些文件生成</span></span><br><span class="line"><span class="comment"># 命令： 由依赖文件生成目标文件的命令</span></span><br></pre></td></tr></table></figure><h1 id="工作原理"><a class="markdownIt-Anchor" href="#工作原理"></a> 工作原理</h1><ul><li>要生成目标，首先检查依赖中所有文件是否都存在</li></ul><p><img src="https://cdn.nlark.com/yuque/0/2023/png/1455047/1674907554592-5c161503-6cf6-4feb-900c-c0e51705ff08.png#averageHue=%23faf2ed&amp;clientId=ued2fc77f-a240-4&amp;from=paste&amp;height=151&amp;id=u6952ad12&amp;name=image.png&amp;originHeight=151&amp;originWidth=393&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=237995&amp;status=done&amp;style=none&amp;taskId=u2b16dc90-09b8-42eb-b4e2-ae686c80d07&amp;title=&amp;width=393" alt="image.png"></p><ul><li>若所有依赖都存在，检查规则中的目标是否需要更新，依赖被更新，相应的目标也需要更新</li></ul><p><img src="https://cdn.nlark.com/yuque/0/2023/png/1455047/1674907634339-78865234-1887-499f-affb-ea9eb4a26512.png#averageHue=%23fcf4f1&amp;clientId=ued2fc77f-a240-4&amp;from=paste&amp;height=164&amp;id=ue9275f28&amp;name=image.png&amp;originHeight=164&amp;originWidth=305&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=200651&amp;status=done&amp;style=none&amp;taskId=ufc552b9b-3544-4c8b-b064-a84d70ea6b6&amp;title=&amp;width=305" alt="image.png"></p><h1 id="语法"><a class="markdownIt-Anchor" href="#语法"></a> 语法</h1><ul><li><strong>普通变量</strong><ul><li>用=定义</li><li>使用 $(变量名)</li></ul></li><li><strong>预定义变量</strong></li></ul><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CC&#x3D;gcc</span><br><span class="line">CPPFLAGS:C预处理的选项 -I</span><br><span class="line">CFLAGS: C编译器的选项 -Wall -g -c</span><br><span class="line">LDFLAGS:链接器选项 -L -l</span><br></pre></td></tr></table></figure><ul><li><strong>自动变量</strong><ul><li>$@表示规则中的目标</li><li>$&lt;表示规则中的第一个条件</li><li>$^表示规则中的所有条件, 组成一个列表, 以空格隔开, 如果这个列表中有重复的项则消除重复项。</li></ul></li><li><strong>模式规则</strong><ul><li>至少在规则的目标定义中要包含 ‘%’,  ‘%’ 表示一个或多个, 在依赖条件中同样可以使用’%’ , 依赖条件中的 ‘%’ 的取值取决于其目标</li></ul></li><li><strong>makefile函数</strong><ul><li>wildcard - 查找指定目录下的指定类型的文件</li><li>patsubst - 匹配替换</li></ul></li></ul><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">src&#x3D;$(wildcard *.c)</span><br><span class="line">obj&#x3D;$(patsubst %.c,%.o, $(src))</span><br></pre></td></tr></table></figure><ul><li><strong>makefile清理操作</strong><ul><li>清除编译生成的中间.o文件和最终目标文件</li><li>如果当前目录下有同名clean文件/没有依赖因而默认为最新,则不执行clean对应的命令，可以通过声明伪目标解决<ul><li>伪目标声明:  声明目标为伪目标之后, makefile将不会检查该目标是否存在或者该目标是否需要更新<ul><li>.PHONY:clean</li></ul></li></ul></li><li>**clean命令中的特殊符号**<ul><li>“-”此条命令出错,make也会继续执行后续的命令</li><li>rm -f: 强制执行, 比如若要删除的文件不存在使用-f 不会报错</li><li>“@”不显示命令本身, 只显示结果</li></ul></li></ul></li><li><strong>其他</strong><ul><li>make 默认执行第一个出现的目标, 可通过make dest指定要执行的目标(make clean)</li><li>make -f : -f执行一个makefile文件名称</li></ul></li></ul><h1 id="示例"><a class="markdownIt-Anchor" href="#示例"></a> 示例</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">src=$(wildcard ./*.c)</span><br><span class="line">object=$(patsubst %.c, %.o $(src))</span><br><span class="line">traget=main</span><br><span class="line">CC=gcc</span><br><span class="line">CPPFLAGS=-I./</span><br><span class="line"></span><br><span class="line">$(target):$(object)</span><br><span class="line">$(CC) -o <span class="variable">$@</span> $^</span><br><span class="line"></span><br><span class="line">%.o:%.c</span><br><span class="line">$(CC) -o <span class="variable">$@</span> -c $&lt; $(CPPFLAGS)</span><br><span class="line"></span><br><span class="line">.PHONY:clean</span><br><span class="line">clean:</span><br><span class="line">-rm -f $(target) $(object)</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> tools </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Makefile </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>GDB</title>
+      <link href="//59698/"/>
+      <url>//59698/</url>
+      
+        <content type="html"><![CDATA[<p>GDB（GNU Debugger）是GCC的调试工具</p><h1 id="生成调试信息"><a class="markdownIt-Anchor" href="#生成调试信息"></a> 生成调试信息</h1><p>GDB主要调试的是C/C<ins>的程序。首先在编译时, 必须要把调试信息加到可执行文件中。使用编译器（cc/gcc/g</ins>）的 -g 参数实现<br>注意：-g 是在可执行程序中加入源码信息，并非将整个源文件嵌入可执行程序。因此调试时候源文件必须仍旧存在；</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gcc -g hello.c -o hello</span><br><span class="line"># 如果没有-g, 你将看不见程序的函数名、变量名, 所代替的全是运行时的内存地址</span><br></pre></td></tr></table></figure><h1 id="启动gdb"><a class="markdownIt-Anchor" href="#启动gdb"></a> 启动gdb</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 启动gdb</span><br><span class="line">gdb program</span><br><span class="line"></span><br><span class="line"># 设置运行参数</span><br><span class="line">set args hello world</span><br><span class="line">show args</span><br></pre></td></tr></table></figure><h1 id="显示源码"><a class="markdownIt-Anchor" href="#显示源码"></a> 显示源码</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">list # 打印当前行后面的程序</span><br><span class="line">list - # 打印当前文件开始出的源程序</span><br><span class="line">list file: lineNum # 显示file文件下第n行</span><br><span class="line">list file: func # 显示file文件的func函数</span><br><span class="line"></span><br><span class="line">set listsize n # 设置一次显示源代码的行数</span><br><span class="line">show listsize # 查看当前listsize的设置</span><br></pre></td></tr></table></figure><h1 id="设置断点"><a class="markdownIt-Anchor" href="#设置断点"></a> 设置断点</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">b n<span class="comment"># n对应行号断点</span></span><br><span class="line">b func<span class="comment"># func函数处断点</span></span><br><span class="line">b file:n</span><br><span class="line">b file:func</span><br><span class="line">b test.c:8 <span class="keyword">if</span> intValue == 5<span class="comment"># 条件断点</span></span><br><span class="line"></span><br><span class="line">info <span class="built_in">break</span><span class="comment"># 断点信息</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">disable</span> m n | m-n <span class="comment"># 关闭断点</span></span><br><span class="line"><span class="built_in">enable</span>  m n | m-n<span class="comment"># 打开断点</span></span><br><span class="line">delete m n | m-n <span class="comment"># 删除断点</span></span><br></pre></td></tr></table></figure><h1 id="调试代码"><a class="markdownIt-Anchor" href="#调试代码"></a> 调试代码</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">run# 停在第一个断点</span><br><span class="line">start# 停在第一条语句</span><br><span class="line"></span><br><span class="line">next# 单步跟踪，不进入函数体</span><br><span class="line"></span><br><span class="line">step# 单步，函数调用进入函数体内</span><br><span class="line">finish# 退出进入的函数，如果无效，可能是设置有断点 </span><br><span class="line"></span><br><span class="line">until# 退出循环体</span><br><span class="line">continue# 运行到下一个断点处</span><br></pre></td></tr></table></figure><h1 id="追踪变量"><a class="markdownIt-Anchor" href="#追踪变量"></a> 追踪变量</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span> var <span class="comment"># 打印变量</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">display var<span class="comment"># 持续显示变量</span></span><br><span class="line">info display<span class="comment"># display相关信息</span></span><br><span class="line"><span class="comment"># 关闭/打开持续显示变量</span></span><br><span class="line"><span class="built_in">disable</span> display m n | m-n</span><br><span class="line"><span class="built_in">enable</span> display m n | m-n</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">delete display m n | m-n</span><br><span class="line">undisplay m n | m-n</span><br><span class="line"></span><br><span class="line">ptype var   <span class="comment"># 查看变量var的类型</span></span><br><span class="line">p var <span class="comment"># 打印变量var的值</span></span><br><span class="line"><span class="built_in">set</span> var i=1     <span class="comment"># 修改变量参数</span></span><br></pre></td></tr></table></figure><h1 id="多进程调试"><a class="markdownIt-Anchor" href="#多进程调试"></a> 多进程调试</h1><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">show follow-fork-mode</span><br><span class="line"><span class="built_in">set</span> follow-fork-mode [parent(默认) | child]</span><br></pre></td></tr></table></figure><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">show <span class="built_in">detach</span>-on-fork</span><br><span class="line"><span class="built_in">set</span> <span class="built_in">detach</span>-on-fork [on(默认) | off]</span><br></pre></td></tr></table></figure><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">info inferiors</span><br><span class="line">inferior id</span><br><span class="line"><span class="built_in">detach</span> inferiors id</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> tools </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Anaconda </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Anaconda</title>
       <link href="//41489/"/>
       <url>//41489/</url>

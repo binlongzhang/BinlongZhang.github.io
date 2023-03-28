@@ -20,17 +20,22 @@
     var CONFIG = {"hostname":"binlongzhang.github.io","root":"/","scheme":"Gemini","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":"ture","color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="Gonlnib 的个人博客，主要内容会涉及一些学习记录、思考、理解，也会有一些个人爱好的展示">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Gonlnib&#39;s Blog">
-<meta property="og:url" content="https://binlongzhang.github.io/tags/%E5%86%B3%E7%AD%96%E6%A0%91/index.html">
+  <meta name="description" content="-&gt; 简要介绍Vim的用法和常见命令">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vim">
+<meta property="og:url" content="https://binlongzhang.github.io/44303/index.html">
 <meta property="og:site_name" content="Gonlnib&#39;s Blog">
-<meta property="og:description" content="Gonlnib 的个人博客，主要内容会涉及一些学习记录、思考、理解，也会有一些个人爱好的展示">
+<meta property="og:description" content="-&gt; 简要介绍Vim的用法和常见命令">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/png/1455047/1674816781426-4870888f-b78f-4c56-90e0-26f8ab24a6af.png#averageHue=%23fbfbfb&amp;clientId=u46ee56d0-7d42-4&amp;from=paste&amp;height=292&amp;id=ua5397485&amp;name=image.png&amp;originHeight=292&amp;originWidth=356&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=416849&amp;status=done&amp;style=none&amp;taskId=ubd88c0a6-9d2d-4fdb-9b8e-3a845ae4bc4&amp;title=&amp;width=356">
+<meta property="article:published_time" content="2023-03-28T07:01:54.023Z">
+<meta property="article:modified_time" content="2023-03-28T07:03:07.194Z">
 <meta property="article:author" content="Gonlnib">
+<meta property="article:tag" content="Vim">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2023/png/1455047/1674816781426-4870888f-b78f-4c56-90e0-26f8ab24a6af.png#averageHue=%23fbfbfb&amp;clientId=u46ee56d0-7d42-4&amp;from=paste&amp;height=292&amp;id=ua5397485&amp;name=image.png&amp;originHeight=292&amp;originWidth=356&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=416849&amp;status=done&amp;style=none&amp;taskId=ubd88c0a6-9d2d-4fdb-9b8e-3a845ae4bc4&amp;title=&amp;width=356">
 
-<link rel="canonical" href="https://binlongzhang.github.io/tags/%E5%86%B3%E7%AD%96%E6%A0%91/">
+<link rel="canonical" href="https://binlongzhang.github.io/44303/">
 
 
 <script id="page-configurations">
@@ -38,11 +43,11 @@
   CONFIG.page = {
     sidebar: "",
     isHome: false,
-    isPost: false
+    isPost: true
   };
 </script>
 
-  <title>标签: 决策树 | Gonlnib's Blog</title>
+  <title>Vim | Gonlnib's Blog</title>
   
 
 
@@ -178,54 +183,362 @@
           <div class="content">
             
 
+  <div class="posts-expand">
+      
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h1 class="collection-header">决策树
-          <small>标签</small>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://binlongzhang.github.io/44303/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/logo.png">
+      <meta itemprop="name" content="Gonlnib">
+      <meta itemprop="description" content="Gonlnib 的个人博客，主要内容会涉及一些学习记录、思考、理解，也会有一些个人爱好的展示">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gonlnib's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Vim
         </h1>
-      </div>
+
+        <div class="post-meta">
+
+          
+          	<i class="fa fa-thumb-tack"></i>
+          	<font color=7D26CD>置顶</font>
+          	<span class="post-meta-divider">|</span>
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-03-28 15:01:54 / 修改时间：15:03:07" itemprop="dateCreated datePublished" datetime="2023-03-28T15:01:54+08:00">2023-03-28</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/tools/" itemprop="url" rel="index">
+                    <span itemprop="name">tools</span>
+                  </a>
+                </span>
+            </span>
+
+          
+          <br>
+            <span id="/44303/" class="post-meta-item leancloud_visitors" data-flag-title="Vim" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/44303/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/44303/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>608</span>
+            </span>
+            <div class="post-description">-> 简要介绍Vim的用法和常见命令</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <h1 class="collection-header">2020</h1>
+        <blockquote>
+<p>帮助文档 – vimtutor</p>
+</blockquote>
+<h1 id="模式"><a class="markdownIt-Anchor" href="#模式"></a> 模式</h1>
+<p><img src="https://cdn.nlark.com/yuque/0/2023/png/1455047/1674816781426-4870888f-b78f-4c56-90e0-26f8ab24a6af.png#averageHue=%23fbfbfb&amp;clientId=u46ee56d0-7d42-4&amp;from=paste&amp;height=292&amp;id=ua5397485&amp;name=image.png&amp;originHeight=292&amp;originWidth=356&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=416849&amp;status=done&amp;style=none&amp;taskId=ubd88c0a6-9d2d-4fdb-9b8e-3a845ae4bc4&amp;title=&amp;width=356" alt="image.png"></p>
+<h1 id="基本命令"><a class="markdownIt-Anchor" href="#基本命令"></a> 基本命令</h1>
+<h2 id="命令模式"><a class="markdownIt-Anchor" href="#命令模式"></a> 命令模式</h2>
+<table>
+<thead>
+<tr>
+<th>ZZ</th>
+<th>保存退出</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>gg=G</td>
+<td>代码格式化</td>
+</tr>
+<tr>
+<td>set nu</td>
+<td>设置显示行号</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>k,  j,  h,  l (上,下,左,右)</td>
+<td>光标移动</td>
+</tr>
+<tr>
+<td>gg, G</td>
+<td>光标移动到文件首、尾</td>
+</tr>
+<tr>
+<td>0, $</td>
+<td>光标移动到行首、尾</td>
+</tr>
+<tr>
+<td>nG</td>
+<td>行转跳，到n行</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>x, X</td>
+<td>删除光标后/前的字符</td>
+</tr>
+<tr>
+<td>dd/ndd</td>
+<td>删除光标所在行/后n行</td>
+</tr>
+<tr>
+<td>ndd</td>
+<td>从当前光标删除n行</td>
+</tr>
+<tr>
+<td>v/ctrl+v</td>
+<td>使用h、j、k、l移动选择内容, 然后删除/编辑。其中ctrl+v是列模式, v为非列模式</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>u</td>
+<td>撤销</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>yy/nyy</td>
+<td>赋值当前行/n行</td>
+</tr>
+<tr>
+<td>p/P</td>
+<td>所在位置下一行/上一行粘贴</td>
+</tr>
+<tr>
+<td>r/R</td>
+<td>替换当前字符/当前行后的字符</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>/xxxx，？xxx</strong></td>
+<td><strong>从当前位置搜索，n/N分别向上/下</strong></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>i, a</td>
+<td>光标前/后插入</td>
+</tr>
+<tr>
+<td>I, A</td>
+<td>行首/尾插入</td>
+</tr>
+<tr>
+<td>o, O</td>
+<td>光标所在行下/上创建一行</td>
+</tr>
+<tr>
+<td>s, S</td>
+<td>删除光标后/所在当前行，从当前位置/行插入</td>
+</tr>
+</tbody>
+</table>
+<h2 id="末行状态"><a class="markdownIt-Anchor" href="#末行状态"></a> 末行状态</h2>
+<blockquote>
+<p>命令模式下输入(:)切换至末行模式；<br>
+两次ESC，Backspace或回车键切回命令模式</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>q/q!</th>
+<th>退出/强制退出</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>w</td>
+<td>写入</td>
+</tr>
+<tr>
+<td>wq</td>
+<td>写入并退出</td>
+</tr>
+<tr>
+<td>x</td>
+<td>同上</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>😒/old/new/</td>
+<td>光标所在行的第一个old替换为new</td>
+</tr>
+<tr>
+<td>😒/old/new/g</td>
+<td>光标所在行的所有old替换为new</td>
+</tr>
+<tr>
+<td>:%s/old/new/g</td>
+<td>当前文件的所有old替换为new</td>
+</tr>
+<tr>
+<td>:%s/old/new/gc</td>
+<td>同上，但是每次替换需要用户确认</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>ctrl + u/d/f/b</td>
+<td>向下/上/前/后翻页</td>
+</tr>
+<tr>
+<td>!shell 命令</td>
+<td>末行模式下执行shell命令</td>
+</tr>
+</tbody>
+</table>
+<h2 id="vim配置文件"><a class="markdownIt-Anchor" href="#vim配置文件"></a> Vim配置文件</h2>
+<ul>
+<li>用户级别配置文件 ~/.vimrc</li>
+<li>系统级别配置文件 /etc/vim/vimrc</li>
+</ul>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+    
+    
+    
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-02-09T22:32:11+08:00"
-              content="2020-02-09">
-          02-09
-        </time>
+    <div>
+      
+        ﻿<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+      
+    </div>
+        <div class="reward-container">
+  <div>作者将会持续总结、分享，如果愿意支持作者，作者将会十分感激！！！</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="Gonlnib 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="Gonlnib 支付宝">
+        <p>支付宝</p>
       </div>
 
-      <h2 class="post-title">
-          <a class="post-title-link" href="/8ddc7426/" itemprop="url">
-            <span itemprop="name">决策树</span>
-          </a>
-      </h2>
-
-    </header>
-  </article>
-
-    </div>
   </div>
+</div>
+
+
+
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Vim/" rel="tag"><i class="fa fa-tag"></i> Vim</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/978/" rel="prev" title="Makefile">
+      <i class="fa fa-chevron-left"></i> Makefile
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/54464/" rel="next" title="GCC">
+      GCC <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
   
   
   
 
-  
-
+  </div>
 
 
           </div>
           
+    <div class="comments" id="valine-comments"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -272,6 +585,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#模式"><span class="nav-text"> 模式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基本命令"><span class="nav-text"> 基本命令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#命令模式"><span class="nav-text"> 命令模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#末行状态"><span class="nav-text"> 末行状态</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vim配置文件"><span class="nav-text"> Vim配置文件</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 

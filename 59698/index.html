@@ -20,23 +20,20 @@
     var CONFIG = {"hostname":"binlongzhang.github.io","root":"/","scheme":"Gemini","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":"ture","color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="-&gt; 简要介绍anaconda的用法和常见命令">
+  <meta name="description" content="-&gt; 简要介绍GDB的用法和常见命令">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Anaconda">
-<meta property="og:url" content="https://binlongzhang.github.io/41489/index.html">
+<meta property="og:title" content="GDB">
+<meta property="og:url" content="https://binlongzhang.github.io/59698/index.html">
 <meta property="og:site_name" content="Gonlnib&#39;s Blog">
-<meta property="og:description" content="-&gt; 简要介绍anaconda的用法和常见命令">
+<meta property="og:description" content="-&gt; 简要介绍GDB的用法和常见命令">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://binlongzhang.github.io/41489/1.jpg">
-<meta property="og:image" content="https://binlongzhang.github.io/41489/2.jpg">
-<meta property="article:published_time" content="2021-04-04T03:33:57.000Z">
-<meta property="article:modified_time" content="2021-04-04T03:37:43.177Z">
+<meta property="article:published_time" content="2023-03-28T06:43:19.547Z">
+<meta property="article:modified_time" content="2023-03-28T06:58:19.335Z">
 <meta property="article:author" content="Gonlnib">
 <meta property="article:tag" content="Anaconda">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://binlongzhang.github.io/41489/1.jpg">
 
-<link rel="canonical" href="https://binlongzhang.github.io/41489/">
+<link rel="canonical" href="https://binlongzhang.github.io/59698/">
 
 
 <script id="page-configurations">
@@ -48,7 +45,7 @@
   };
 </script>
 
-  <title>Anaconda | Gonlnib's Blog</title>
+  <title>GDB | Gonlnib's Blog</title>
   
 
 
@@ -189,7 +186,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://binlongzhang.github.io/41489/">
+    <link itemprop="mainEntityOfPage" href="https://binlongzhang.github.io/59698/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/logo.png">
@@ -202,7 +199,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Anaconda
+          GDB
         </h1>
 
         <div class="post-meta">
@@ -219,7 +216,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2021-04-04 11:33:57 / 修改时间：11:37:43" itemprop="dateCreated datePublished" datetime="2021-04-04T11:33:57+08:00">2021-04-04</time>
+              <time title="创建时间：2023-03-28 14:43:19 / 修改时间：14:58:19" itemprop="dateCreated datePublished" datetime="2023-03-28T14:43:19+08:00">2023-03-28</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -235,7 +232,7 @@
 
           
           <br>
-            <span id="/41489/" class="post-meta-item leancloud_visitors" data-flag-title="Anaconda" title="阅读次数">
+            <span id="/59698/" class="post-meta-item leancloud_visitors" data-flag-title="GDB" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -257,8 +254,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/41489/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/41489/" itemprop="commentCount"></span>
+    <a title="valine" href="/59698/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/59698/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -268,9 +265,9 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>876</span>
+              <span>1.1k</span>
             </span>
-            <div class="post-description">-> 简要介绍anaconda的用法和常见命令</div>
+            <div class="post-description">-> 简要介绍GDB的用法和常见命令</div>
 
         </div>
       </header>
@@ -281,57 +278,25 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="conda常用命令"><a class="markdownIt-Anchor" href="#conda常用命令"></a> conda常用命令</h1>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">conda -V  #查看conda版本</span><br><span class="line">conda update conda #更新至最新的版本，也会更新相关包</span><br><span class="line"></span><br><span class="line">#查看环境管理的全部命令</span><br><span class="line">conda env -h    </span><br><span class="line"></span><br><span class="line">#显示所有已创建的环境</span><br><span class="line">conda info -e</span><br><span class="line">conda env list</span><br><span class="line"></span><br><span class="line"> #切换至某个环境中</span><br><span class="line">activate env_name</span><br><span class="line"></span><br><span class="line">#新建环境</span><br><span class="line">conda create --name your_env_name python&#x3D;3.5</span><br></pre></td></tr></table></figure>
-<h1 id="pip常用命令"><a class="markdownIt-Anchor" href="#pip常用命令"></a> pip常用命令</h1>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">python -m pip install --upgrade pip</span><br><span class="line">pip install packageName</span><br><span class="line">pip uninstall packageName</span><br></pre></td></tr></table></figure>
-<h1 id="jupyter-notebooklab"><a class="markdownIt-Anchor" href="#jupyter-notebooklab"></a> Jupyter Notebook/Lab</h1>
-<h2 id="启动"><a class="markdownIt-Anchor" href="#启动"></a> 启动</h2>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#通过批处理脚本来启动jupyter lab</span><br><span class="line">rem -- start_jupyter_notebook.bat ---</span><br><span class="line"></span><br><span class="line">cd D:\PythonProgram\SentimentAnalysis</span><br><span class="line"></span><br><span class="line">d:</span><br><span class="line"></span><br><span class="line">call activate sentimentAnalysis</span><br><span class="line">call jupyter lab</span><br></pre></td></tr></table></figure>
-<h2 id="基本操作"><a class="markdownIt-Anchor" href="#基本操作"></a> 基本操作</h2>
-<ul>
-<li>
-<p>Jupyter Notebook有两种mode</p>
-</li>
-<li>
-<ul>
-<li>Enter：进入edit模式;</li>
-<li>Esc：进入command模式;</li>
-<li>command模式下按&quot;H&quot;可以查看快捷键;</li>
-</ul>
-</li>
-<li>
-<p>在Jupyter Notebook中的笔记本单元格中用英文感叹号“!”后接shell命令即可执行shell命令。</p>
-</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!shell命令</span><br></pre></td></tr></table></figure>
-<ul>
-<li>关联Jupyter Notebook和conda的环境和包——“nb_conda”</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda install nb_conda</span><br></pre></td></tr></table></figure>
-<h2 id="常用扩展"><a class="markdownIt-Anchor" href="#常用扩展"></a> 常用扩展</h2>
-<ul>
-<li>
-<p>Jupyter Notebook无法为Markdown文档通过特定语法添加目录，因此需要通过安装扩展来实现目录的添加。</p>
-</li>
-<li>
-<ul>
-<li>安装对应扩展</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda install -c conda-forge jupyter_contrib_nbextensions</span><br></pre></td></tr></table></figure>
-<ul>
-<li>
-<ul>
-<li>在 “Nbextensions&quot;中勾选&quot;Table of contents”<img src="/41489/1.jpg" alt></li>
-<li>点击图标即可显示<img src="/41489/2.jpg" alt="image"></li>
-</ul>
-</li>
-<li>
-<p>Jupyter Lab使用kite来完善代码补全的功能</p>
-</li>
-</ul>
+        <p>GDB（GNU Debugger）是GCC的调试工具</p>
+<h1 id="生成调试信息"><a class="markdownIt-Anchor" href="#生成调试信息"></a> 生成调试信息</h1>
+<p>GDB主要调试的是C/C<ins>的程序。首先在编译时, 必须要把调试信息加到可执行文件中。使用编译器（cc/gcc/g</ins>）的 -g 参数实现<br>
+注意：-g 是在可执行程序中加入源码信息，并非将整个源文件嵌入可执行程序。因此调试时候源文件必须仍旧存在；</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gcc -g hello.c -o hello</span><br><span class="line"># 如果没有-g, 你将看不见程序的函数名、变量名, 所代替的全是运行时的内存地址</span><br></pre></td></tr></table></figure>
+<h1 id="启动gdb"><a class="markdownIt-Anchor" href="#启动gdb"></a> 启动gdb</h1>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 启动gdb</span><br><span class="line">gdb program</span><br><span class="line"></span><br><span class="line"># 设置运行参数</span><br><span class="line">set args hello world</span><br><span class="line">show args</span><br></pre></td></tr></table></figure>
+<h1 id="显示源码"><a class="markdownIt-Anchor" href="#显示源码"></a> 显示源码</h1>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">list 		# 打印当前行后面的程序</span><br><span class="line">list - 	# 打印当前文件开始出的源程序</span><br><span class="line">list file: lineNum # 显示file文件下第n行</span><br><span class="line">list file: func		 # 显示file文件的func函数</span><br><span class="line"></span><br><span class="line">set listsize n		 # 设置一次显示源代码的行数</span><br><span class="line">show listsize			 # 查看当前listsize的设置</span><br></pre></td></tr></table></figure>
+<h1 id="设置断点"><a class="markdownIt-Anchor" href="#设置断点"></a> 设置断点</h1>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">b n					<span class="comment"># n对应行号断点</span></span><br><span class="line">b func			<span class="comment"># func函数处断点</span></span><br><span class="line">b file:n</span><br><span class="line">b file:func</span><br><span class="line">b test.c:8 <span class="keyword">if</span> intValue == 5	<span class="comment"># 条件断点</span></span><br><span class="line"></span><br><span class="line">info <span class="built_in">break</span>	<span class="comment"># 断点信息</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">disable</span> m n | m-n <span class="comment"># 关闭断点</span></span><br><span class="line"><span class="built_in">enable</span>  m n | m-n	<span class="comment"># 打开断点</span></span><br><span class="line">delete m n | m-n 	<span class="comment"># 删除断点</span></span><br></pre></td></tr></table></figure>
+<h1 id="调试代码"><a class="markdownIt-Anchor" href="#调试代码"></a> 调试代码</h1>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">run			# 停在第一个断点</span><br><span class="line">start		# 停在第一条语句</span><br><span class="line"></span><br><span class="line">next		# 单步跟踪，不进入函数体</span><br><span class="line"></span><br><span class="line">step		# 单步，函数调用进入函数体内</span><br><span class="line">finish	# 退出进入的函数，如果无效，可能是设置有断点 </span><br><span class="line"></span><br><span class="line">until		# 退出循环体</span><br><span class="line">continue# 运行到下一个断点处</span><br></pre></td></tr></table></figure>
+<h1 id="追踪变量"><a class="markdownIt-Anchor" href="#追踪变量"></a> 追踪变量</h1>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span> var 		<span class="comment"># 打印变量</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">display var		<span class="comment"># 持续显示变量</span></span><br><span class="line">info display	<span class="comment"># display相关信息</span></span><br><span class="line"><span class="comment"># 关闭/打开持续显示变量</span></span><br><span class="line"><span class="built_in">disable</span> display m n | m-n</span><br><span class="line"><span class="built_in">enable</span> display m n | m-n</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">delete display m n | m-n</span><br><span class="line">undisplay m n | m-n</span><br><span class="line"></span><br><span class="line">ptype var   		<span class="comment"># 查看变量var的类型</span></span><br><span class="line">p var 					<span class="comment"># 打印变量var的值</span></span><br><span class="line"><span class="built_in">set</span> var i=1     <span class="comment"># 修改变量参数</span></span><br></pre></td></tr></table></figure>
+<h1 id="多进程调试"><a class="markdownIt-Anchor" href="#多进程调试"></a> 多进程调试</h1>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">show follow-fork-mode</span><br><span class="line"><span class="built_in">set</span> follow-fork-mode [parent(默认) | child]</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">show <span class="built_in">detach</span>-on-fork</span><br><span class="line"><span class="built_in">set</span> <span class="built_in">detach</span>-on-fork [on(默认) | off]</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">info inferiors</span><br><span class="line">inferior id</span><br><span class="line"><span class="built_in">detach</span> inferiors id</span><br></pre></td></tr></table></figure>
 
     </div>
 
@@ -385,12 +350,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/25246/" rel="prev" title="Git">
-      <i class="fa fa-chevron-left"></i> Git
+    <a href="/41489/" rel="prev" title="Anaconda">
+      <i class="fa fa-chevron-left"></i> Anaconda
     </a></div>
       <div class="post-nav-item">
-    <a href="/59698/" rel="next" title="GDB">
-      GDB <i class="fa fa-chevron-right"></i>
+    <a href="/978/" rel="next" title="Makefile">
+      Makefile <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -452,7 +417,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#conda常用命令"><span class="nav-text"> conda常用命令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#pip常用命令"><span class="nav-text"> pip常用命令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#jupyter-notebooklab"><span class="nav-text"> Jupyter Notebook&#x2F;Lab</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#启动"><span class="nav-text"> 启动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本操作"><span class="nav-text"> 基本操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用扩展"><span class="nav-text"> 常用扩展</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#生成调试信息"><span class="nav-text"> 生成调试信息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#启动gdb"><span class="nav-text"> 启动gdb</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#显示源码"><span class="nav-text"> 显示源码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#设置断点"><span class="nav-text"> 设置断点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#调试代码"><span class="nav-text"> 调试代码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#追踪变量"><span class="nav-text"> 追踪变量</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#多进程调试"><span class="nav-text"> 多进程调试</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -606,54 +571,6 @@
   
 
   
-      
-<script type="text/x-mathjax-config">
-
-  MathJax.Hub.Config({
-    tex2jax: {
-      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
-      processEscapes: true,
-      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    },
-    TeX: {
-      equationNumbers: {
-        autoNumber: 'AMS'
-      }
-    }
-  });
-
-  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
-    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
-      if (data.display) {
-        var next = data.script.nextSibling;
-        while (next && next.nodeName.toLowerCase() === '#text') {
-          next = next.nextSibling;
-        }
-        if (next && next.nodeName.toLowerCase() === 'br') {
-          next.parentNode.removeChild(next);
-        }
-      }
-    });
-  });
-
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for (i = 0; i < all.length; i += 1) {
-      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
-      if (element.nodeName.toLowerCase() == 'li') {
-        element = element.parentNode;
-      }
-      element.classList.add('has-jax');
-    }
-  });
-</script>
-<script>
-  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
-    MathJax.Hub.Typeset();
-  }, window.MathJax);
-</script>
-
-    
 
   
 

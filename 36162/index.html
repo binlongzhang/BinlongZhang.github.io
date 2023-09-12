@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.ico">
+  <link rel="mask-icon" href="/images/logo.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"binlongzhang.github.io","root":"/","scheme":"Gemini","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":"ture","color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="-&gt; 结构模式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Structural Pattern">
+<meta property="og:url" content="https://binlongzhang.github.io/36162/index.html">
+<meta property="og:site_name" content="Gonlnib&#39;s Blog">
+<meta property="og:description" content="-&gt; 结构模式">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/jpeg/1455047/1681228415108-69a3b412-6a3e-4b03-876c-03346ea95211.jpeg#averageHue=%23f4f2ef&amp;clientId=ucdb3b667-bf5d-4&amp;from=drop&amp;id=u7f3cb8a3&amp;originHeight=313&amp;originWidth=724&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=24090&amp;status=done&amp;style=none&amp;taskId=ub03b7e95-0079-4eee-971e-e7d265dee6a&amp;title=">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/jpeg/1455047/1681228536534-8f5338d2-ca8a-424d-b318-7c8641f04d81.jpeg#averageHue=%23f6f4f1&amp;clientId=ucdb3b667-bf5d-4&amp;from=drop&amp;id=uce3868cd&amp;originHeight=344&amp;originWidth=663&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=24482&amp;status=done&amp;style=none&amp;taskId=u1336d31a-7d41-4100-a407-15e7fc21725&amp;title=">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/jpeg/1455047/1681230121463-af94d0b8-39d4-42b7-b22b-30b41494276f.jpeg#averageHue=%23f3efea&amp;clientId=u47ad9d9d-7dd0-4&amp;from=drop&amp;id=ud1fc48bb&amp;originHeight=393&amp;originWidth=867&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=43797&amp;status=done&amp;style=none&amp;taskId=u875363bb-4e7e-49a9-9e39-c8e14f73ed3&amp;title=">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/png/1455047/1681265782893-b805ddf1-3b2a-4f45-b0e4-ee9b9a885e98.png#averageHue=%23585757&amp;clientId=uee2d87a5-7e20-4&amp;from=paste&amp;id=u9b91a8e5&amp;originHeight=480&amp;originWidth=640&amp;originalType=url&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=88538&amp;status=done&amp;style=none&amp;taskId=u033e1a87-5a83-43fa-b07e-1b31820ff1a&amp;title=">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/png/1455047/1681270382131-702709b0-c696-41c9-88d4-00299010f2c7.png#averageHue=%237b937c&amp;clientId=u372b2196-cc6d-4&amp;from=drop&amp;id=u42ca1d29&amp;originHeight=470&amp;originWidth=400&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=10345&amp;status=done&amp;style=none&amp;taskId=u93346f98-5256-4d46-939f-6d7bd1b4c81&amp;title=">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/png/1455047/1681286654692-239a0f80-8673-4505-aa23-05b1f313062d.png#averageHue=%23859a86&amp;clientId=u372b2196-cc6d-4&amp;from=drop&amp;id=ua9b5225f&amp;originHeight=510&amp;originWidth=500&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=16850&amp;status=done&amp;style=none&amp;taskId=u1a852731-44b0-42b2-85f5-f9751764de6&amp;title=">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/png/1455047/1681291244307-dd04cd3e-49fb-42d3-8a6c-c2406fb9517d.png#averageHue=%23d7d7d6&amp;clientId=u372b2196-cc6d-4&amp;from=drop&amp;id=uda2e88a0&amp;originHeight=380&amp;originWidth=600&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=14002&amp;status=done&amp;style=none&amp;taskId=u942e582c-03d2-4078-ac13-58e6e203b01&amp;title=">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/png/1455047/1681295083281-efba75a5-c959-4eb4-80f4-70a4051aaa00.png#averageHue=%2392a492&amp;clientId=u372b2196-cc6d-4&amp;from=drop&amp;id=u4808acbd&amp;originHeight=410&amp;originWidth=630&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=19630&amp;status=done&amp;style=none&amp;taskId=u2148f03f-d066-40f4-aed5-202435de60a&amp;title=">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/png/1455047/1681302848398-279ce6b8-03eb-4cc9-a919-71202a60b6dd.png#averageHue=%23849a85&amp;clientId=u372b2196-cc6d-4&amp;from=drop&amp;id=ub76a9fdd&amp;originHeight=390&amp;originWidth=410&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=9662&amp;status=done&amp;style=none&amp;taskId=u8c6526ea-c6a5-4081-afdf-e0df3c2d24e&amp;title=">
+<meta property="article:published_time" content="2023-09-12T03:46:21.621Z">
+<meta property="article:modified_time" content="2023-09-12T03:51:40.056Z">
+<meta property="article:author" content="Gonlnib">
+<meta property="article:tag" content="Design Pattern">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2023/jpeg/1455047/1681228415108-69a3b412-6a3e-4b03-876c-03346ea95211.jpeg#averageHue=%23f4f2ef&amp;clientId=ucdb3b667-bf5d-4&amp;from=drop&amp;id=u7f3cb8a3&amp;originHeight=313&amp;originWidth=724&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=24090&amp;status=done&amp;style=none&amp;taskId=ub03b7e95-0079-4eee-971e-e7d265dee6a&amp;title=">
+
+<link rel="canonical" href="https://binlongzhang.github.io/36162/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>Structural Pattern | Gonlnib's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Gonlnib's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">23</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">5</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">18</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://binlongzhang.github.io/36162/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/logo.png">
+      <meta itemprop="name" content="Gonlnib">
+      <meta itemprop="description" content="Gonlnib 的个人博客，主要内容会涉及一些学习记录、思考、理解，也会有一些个人爱好的展示">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gonlnib's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Structural Pattern
+        </h1>
+
+        <div class="post-meta">
+
+          
+          	<i class="fa fa-thumb-tack"></i>
+          	<font color=7D26CD>置顶</font>
+          	<span class="post-meta-divider">|</span>
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-09-12 11:46:21 / 修改时间：11:51:40" itemprop="dateCreated datePublished" datetime="2023-09-12T11:46:21+08:00">2023-09-12</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Design-Pattern/" itemprop="url" rel="index">
+                    <span itemprop="name">Design Pattern</span>
+                  </a>
+                </span>
+            </span>
+
+          
+          <br>
+            <span id="/36162/" class="post-meta-item leancloud_visitors" data-flag-title="Structural Pattern" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/36162/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/36162/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2k</span>
+            </span>
+            <div class="post-description">-> 结构模式</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <ul>
+<li>
+<ul>
+<li>描述如何将类或者对象结合在一起，形成更大、更复杂的结构。</li>
+</ul>
+</li>
+<li>其包括 <strong>类结构型模式</strong> 和 <strong>对象结构型模式</strong></li>
+<li>类结构模式一般存在于继承和实现关系。对象结构模型关心类与对象的组合，通过关联关系实现。系统中尽量用关联关系代替继承关系，因此大部分结构性模式都是对象结构性模式</li>
+</ul>
+<h1 id="adapter"><a class="markdownIt-Anchor" href="#adapter"></a> Adapter</h1>
+<blockquote>
+<ul>
+<li>适配器模式中定义包装类，包装不兼容接口的对象（适配者）</li>
+<li>适配器提供用户所需接口，将用户请求转化为适配者对应的调用，是的接口不兼容的类进行交互</li>
+</ul>
+</blockquote>
+<h2 id="结构"><a class="markdownIt-Anchor" href="#结构"></a> 结构</h2>
+<ul>
+<li>Target</li>
+<li>Adapter</li>
+<li>Adaptee</li>
+<li>Client</li>
+</ul>
+<p><img src="https://cdn.nlark.com/yuque/0/2023/jpeg/1455047/1681228415108-69a3b412-6a3e-4b03-876c-03346ea95211.jpeg#averageHue=%23f4f2ef&amp;clientId=ucdb3b667-bf5d-4&amp;from=drop&amp;id=u7f3cb8a3&amp;originHeight=313&amp;originWidth=724&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=24090&amp;status=done&amp;style=none&amp;taskId=ub03b7e95-0079-4eee-971e-e7d265dee6a&amp;title=" alt="Adapter.jpg"><img src="https://cdn.nlark.com/yuque/0/2023/jpeg/1455047/1681228536534-8f5338d2-ca8a-424d-b318-7c8641f04d81.jpeg#averageHue=%23f6f4f1&amp;clientId=ucdb3b667-bf5d-4&amp;from=drop&amp;id=uce3868cd&amp;originHeight=344&amp;originWidth=663&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=24482&amp;status=done&amp;style=none&amp;taskId=u1336d31a-7d41-4100-a407-15e7fc21725&amp;title=" alt="Adapter_classModel.jpg"></p>
+<h2 id="特点"><a class="markdownIt-Anchor" href="#特点"></a> 特点</h2>
+<ul>
+<li>引入一个适配器复用现有适配者类，增强了类的透明性和复用性</li>
+</ul>
+<hr>
+<ul>
+<li>类适配器是适配者的子类，因此可以在适配器类中置换一些适配者方法，是适配器类更灵活</li>
+<li>对于不支持多继承的语言，适配这类一次只能适配一个适配者类，因此使用有局限</li>
+</ul>
+<hr>
+<ul>
+<li>对象适配器可以把多个不同的适配者适配到同一目标</li>
+<li>于对象适配器想置换适配者方法不太容易，一定要做需要先做一个适配者子类置换对应方法，再实现适配</li>
+</ul>
+<h2 id="场景"><a class="markdownIt-Anchor" href="#场景"></a> 场景</h2>
+<ul>
+<li>系统需要使用现有类，而其接口不符合系统需要</li>
+<li>java 的 JDBC</li>
+</ul>
+<h1 id="bridge"><a class="markdownIt-Anchor" href="#bridge"></a> Bridge</h1>
+<blockquote>
+<ul>
+<li>对于两个维度变化的系统，将继承关系转换为关联关系，降低类与类之间的耦合，减少代码编写量</li>
+<li>也称为 <strong>柄体(handle and body)模式</strong> 或 <strong>接口(Interface)模式</strong></li>
+</ul>
+</blockquote>
+<h2 id="结构-2"><a class="markdownIt-Anchor" href="#结构-2"></a> 结构</h2>
+<ul>
+<li>Abstraction</li>
+<li>RefinedAbstraction</li>
+<li>Implementor</li>
+<li>ConcreteImplementor</li>
+</ul>
+<p><img src="https://cdn.nlark.com/yuque/0/2023/jpeg/1455047/1681230121463-af94d0b8-39d4-42b7-b22b-30b41494276f.jpeg#averageHue=%23f3efea&amp;clientId=u47ad9d9d-7dd0-4&amp;from=drop&amp;id=ud1fc48bb&amp;originHeight=393&amp;originWidth=867&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=43797&amp;status=done&amp;style=none&amp;taskId=u875363bb-4e7e-49a9-9e39-c8e14f73ed3&amp;title=" alt="Bridge.jpg"></p>
+<h2 id="特点-2"><a class="markdownIt-Anchor" href="#特点-2"></a> 特点</h2>
+<ul>
+<li>将抽象化和实现化脱耦，使得二者独立变化，将强关联编程弱关联，最终使用关联而非继承</li>
+<li>分离抽象接口及实现，桥接模式类似于多继承，但比多继承简单，是更好的解决方案</li>
+<li>桥接模式可扩展性高，两个维度中任意扩展一个维度，不需要修改源系统</li>
+<li>但会增加系统难度，对抽象设计要求更高</li>
+</ul>
+<h2 id="场景-2"><a class="markdownIt-Anchor" href="#场景-2"></a> 场景</h2>
+<ul>
+<li>当你想要划分和组织一个有几个功能变种大类</li>
+<li>当你需要扩展一个类在几个独立正交的维度</li>
+<li>当你需要在运行时切换实现时</li>
+</ul>
+<hr>
+<ul>
+<li>系统需要在构件的抽象化角色和具体化角色之间增加更多的灵活性，避免在两个层次之间建立静态的继承联系，通过桥接模式可以使它们在抽象层建立一个关联关系</li>
+<li>抽象化角色和实现化角色可以以继承的方式独立扩展而互不影响，在程序运行时可以动态将一个抽象化子类的对象和一个实现化子类的对象进行组合</li>
+<li>对于那些不希望使用继承或因为多层次继承导致系统类的个数急剧增加的系统，桥接模式尤为适用</li>
+</ul>
+<hr>
+<ul>
+<li>桥接模式和适配器模式用于设计的不同阶段，桥接模式用于系统的初步设计，对于存在两个独立变化维度的类可以将其分为抽象化和实现化两个角色，使它们可以分别进行变化；而在初步设计完成之后，当发现系统与已有类无法协同工作时，可以采用适配器模式。但有时候在设计初期也需要考虑适配器模式，特别是那些涉及到大量第三方应用接口的情况。</li>
+</ul>
+<p><img src="https://cdn.nlark.com/yuque/0/2023/png/1455047/1681265782893-b805ddf1-3b2a-4f45-b0e4-ee9b9a885e98.png#averageHue=%23585757&amp;clientId=uee2d87a5-7e20-4&amp;from=paste&amp;id=u9b91a8e5&amp;originHeight=480&amp;originWidth=640&amp;originalType=url&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=88538&amp;status=done&amp;style=none&amp;taskId=u033e1a87-5a83-43fa-b07e-1b31820ff1a&amp;title=" alt="image.png"></p>
+<h1 id="composite"><a class="markdownIt-Anchor" href="#composite"></a> Composite</h1>
+<blockquote>
+<ul>
+<li>让你组合对象成为树结构 而后 使用这些结构工作好像他们是独立的对象</li>
+<li>仅用于你应用的一些核心模型可以被表示成树结构</li>
+</ul>
+</blockquote>
+<h2 id="结构-3"><a class="markdownIt-Anchor" href="#结构-3"></a> 结构</h2>
+<p><img src="https://cdn.nlark.com/yuque/0/2023/png/1455047/1681270382131-702709b0-c696-41c9-88d4-00299010f2c7.png#averageHue=%237b937c&amp;clientId=u372b2196-cc6d-4&amp;from=drop&amp;id=u42ca1d29&amp;originHeight=470&amp;originWidth=400&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=10345&amp;status=done&amp;style=none&amp;taskId=u93346f98-5256-4d46-939f-6d7bd1b4c81&amp;title=" alt="structure-en-indexed.png"></p>
+<h2 id="特点-3"><a class="markdownIt-Anchor" href="#特点-3"></a> 特点</h2>
+<ul>
+<li>更方便的使用复杂的树结构（利用多态和递归）</li>
+<li>符合 开闭原则</li>
+<li>对于某些功能不同的类，很难提供统一接口，一些场景下过度的抽象使得接口难以理解</li>
+</ul>
+<h2 id="场景-3"><a class="markdownIt-Anchor" href="#场景-3"></a> 场景</h2>
+<ul>
+<li>当你实现对象们可以被组织成树形结构</li>
+<li>当你想要客户端代码对待简单和复杂元素用统一的方法</li>
+</ul>
+<h1 id="decorator"><a class="markdownIt-Anchor" href="#decorator"></a> Decorator</h1>
+<blockquote>
+<p>提供另一种扩展类的方式，提供更高的灵活性，更符合单类单责任</p>
+</blockquote>
+<h2 id="结构-4"><a class="markdownIt-Anchor" href="#结构-4"></a> 结构</h2>
+<p><img src="https://cdn.nlark.com/yuque/0/2023/png/1455047/1681286654692-239a0f80-8673-4505-aa23-05b1f313062d.png#averageHue=%23859a86&amp;clientId=u372b2196-cc6d-4&amp;from=drop&amp;id=ua9b5225f&amp;originHeight=510&amp;originWidth=500&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=16850&amp;status=done&amp;style=none&amp;taskId=u1a852731-44b0-42b2-85f5-f9751764de6&amp;title=" alt="structure-indexed.png"></p>
+<h2 id="特点-4"><a class="markdownIt-Anchor" href="#特点-4"></a> 特点</h2>
+<ul>
+<li>可以扩展一个对象而不用创造一个新类</li>
+<li>可以在运行时添加或移除类的部分责任</li>
+<li>可以组合几个行为通过包裹一个对象到多个装饰器中</li>
+<li>可以划分一个复杂类，实现多个可能的变种行为为几个小的类</li>
+<li>很难移除一个具体的wrapper</li>
+<li>层级的初始配置代码可能看起来很丑陋</li>
+</ul>
+<h2 id="场景-4"><a class="markdownIt-Anchor" href="#场景-4"></a> 场景</h2>
+<ul>
+<li>当你需要赋值额外的行为给运行时对象，并且不修改使用对象</li>
+<li>在一些无法继承的场景下扩展类</li>
+</ul>
+<h1 id="facade"><a class="markdownIt-Anchor" href="#facade"></a> Facade</h1>
+<blockquote>
+<ul>
+<li>给库、框架、其他复杂类提供简单的接口</li>
+<li>外观提供了比直接用子系统更有限的功能，但是却简化了接口，给用户提供真正关心的功能</li>
+</ul>
+</blockquote>
+<h2 id="结构-5"><a class="markdownIt-Anchor" href="#结构-5"></a> 结构</h2>
+<p><img src="https://cdn.nlark.com/yuque/0/2023/png/1455047/1681291244307-dd04cd3e-49fb-42d3-8a6c-c2406fb9517d.png#averageHue=%23d7d7d6&amp;clientId=u372b2196-cc6d-4&amp;from=drop&amp;id=uda2e88a0&amp;originHeight=380&amp;originWidth=600&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=14002&amp;status=done&amp;style=none&amp;taskId=u942e582c-03d2-4078-ac13-58e6e203b01&amp;title=" alt="structure-indexed.png"></p>
+<h2 id="特点-5"><a class="markdownIt-Anchor" href="#特点-5"></a> 特点</h2>
+<ul>
+<li>隔绝你的代码和复杂子系统</li>
+<li>外观可能变成了与应用中所有类耦合的类</li>
+</ul>
+<h2 id="场景-5"><a class="markdownIt-Anchor" href="#场景-5"></a> 场景</h2>
+<ul>
+<li>当你需要简单调用一个复杂子系统</li>
+<li>当你希望将子系统组织成层结构时</li>
+</ul>
+<h1 id="flyweight"><a class="markdownIt-Anchor" href="#flyweight"></a> Flyweight</h1>
+<blockquote>
+<p>为了能将更多对象放入RAM，可以共享对象们通用的状态</p>
+</blockquote>
+<h2 id="结构-6"><a class="markdownIt-Anchor" href="#结构-6"></a> 结构</h2>
+<p><img src="https://cdn.nlark.com/yuque/0/2023/png/1455047/1681295083281-efba75a5-c959-4eb4-80f4-70a4051aaa00.png#averageHue=%2392a492&amp;clientId=u372b2196-cc6d-4&amp;from=drop&amp;id=u4808acbd&amp;originHeight=410&amp;originWidth=630&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=19630&amp;status=done&amp;style=none&amp;taskId=u2148f03f-d066-40f4-aed5-202435de60a&amp;title=" alt="structure-indexed.png"></p>
+<h2 id="特点-6"><a class="markdownIt-Anchor" href="#特点-6"></a> 特点</h2>
+<ul>
+<li>节省大量的RAM，但给cpu增加了负担，因此需要在cpu和RAM间权衡</li>
+<li>增加代码复杂性</li>
+</ul>
+<h2 id="场景-6"><a class="markdownIt-Anchor" href="#场景-6"></a> 场景</h2>
+<ul>
+<li>只有当你的程序必须支撑巨大数量的对象，而导致RAM不足</li>
+<li>游戏场景</li>
+</ul>
+<h1 id="proxy"><a class="markdownIt-Anchor" href="#proxy"></a> Proxy</h1>
+<blockquote>
+<ul>
+<li>代理 控制了对原对象的访问，允许我们在调用某个对象前后额做一些事</li>
+</ul>
+</blockquote>
+<h2 id="结构-7"><a class="markdownIt-Anchor" href="#结构-7"></a> 结构</h2>
+<p><img src="https://cdn.nlark.com/yuque/0/2023/png/1455047/1681302848398-279ce6b8-03eb-4cc9-a919-71202a60b6dd.png#averageHue=%23849a85&amp;clientId=u372b2196-cc6d-4&amp;from=drop&amp;id=ub76a9fdd&amp;originHeight=390&amp;originWidth=410&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=9662&amp;status=done&amp;style=none&amp;taskId=u8c6526ea-c6a5-4081-afdf-e0df3c2d24e&amp;title=" alt="structure-indexed.png"></p>
+<ul>
+<li><strong>代理类</strong> 完成其责任之后会传递请求给服务对象，通常代理管理服务对象的生命周期</li>
+<li>**客户端 **无论和service或proxy工作都需要通过相同接口，如此更好使用proxy替换service</li>
+</ul>
+<h2 id="特点-7"><a class="markdownIt-Anchor" href="#特点-7"></a> 特点</h2>
+<ul>
+<li>可以控制服务对象不让客户端知道</li>
+<li>管理服务对象的生命周期</li>
+<li>即便服务对象没准备好或者不可用，代理仍旧正常工作</li>
+<li>符合开闭 原则</li>
+</ul>
+<hr>
+<ul>
+<li>代码会变得负责</li>
+<li>响应服务会得到延迟</li>
+</ul>
+<h2 id="场景-7"><a class="markdownIt-Anchor" href="#场景-7"></a> 场景</h2>
+<ul>
+<li>懒初始化</li>
+<li>访问控制</li>
+<li>本地执行远程服务（远程代理）</li>
+<li>日志请求</li>
+<li>缓存请求</li>
+<li>智能引用</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <div>
+      
+        ﻿<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+      
+    </div>
+        <div class="reward-container">
+  <div>作者将会持续总结、分享，如果愿意支持作者，作者将会十分感激！！！</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="Gonlnib 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="Gonlnib 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
+
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Design-Pattern/" rel="tag"><i class="fa fa-tag"></i> Design Pattern</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/42358/" rel="prev" title="Creational Pattern">
+      <i class="fa fa-chevron-left"></i> Creational Pattern
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/27188/" rel="next" title="Behavioral Pattern">
+      Behavioral Pattern <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#adapter"><span class="nav-text"> Adapter</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#结构"><span class="nav-text"> 结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#特点"><span class="nav-text"> 特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#场景"><span class="nav-text"> 场景</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#bridge"><span class="nav-text"> Bridge</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#结构-2"><span class="nav-text"> 结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#特点-2"><span class="nav-text"> 特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#场景-2"><span class="nav-text"> 场景</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#composite"><span class="nav-text"> Composite</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#结构-3"><span class="nav-text"> 结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#特点-3"><span class="nav-text"> 特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#场景-3"><span class="nav-text"> 场景</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#decorator"><span class="nav-text"> Decorator</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#结构-4"><span class="nav-text"> 结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#特点-4"><span class="nav-text"> 特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#场景-4"><span class="nav-text"> 场景</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#facade"><span class="nav-text"> Facade</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#结构-5"><span class="nav-text"> 结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#特点-5"><span class="nav-text"> 特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#场景-5"><span class="nav-text"> 场景</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#flyweight"><span class="nav-text"> Flyweight</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#结构-6"><span class="nav-text"> 结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#特点-6"><span class="nav-text"> 特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#场景-6"><span class="nav-text"> 场景</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#proxy"><span class="nav-text"> Proxy</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#结构-7"><span class="nav-text"> 结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#特点-7"><span class="nav-text"> 特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#场景-7"><span class="nav-text"> 场景</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Gonlnib"
+      src="/images/logo.png">
+  <p class="site-author-name" itemprop="name">Gonlnib</p>
+  <div class="site-description" itemprop="description">Gonlnib 的个人博客，主要内容会涉及一些学习记录、思考、理解，也会有一些个人爱好的展示</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">gonlnib</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">69k</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+         <div class=BbeiAn-info" style="color:black pos" align="center">
+                  陕ICP备 -
+                  <a href="http://www.beian.miit.gov.cn/" target="_blank" rel="noopener">20001965号</a>
+                  </a>
+         </div>
+
+      </div>
+
+
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,0' opacity='1' zIndex='-1' count='199' src="//cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-nest@latest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail',];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'RmyI9HlT5Oh3mf6JFv93EYol-gzGzoHsz',
+      appKey     : 'IArUETpHH06QrO50jMFkGho5',
+      placeholder: "Just go go",
+      avatar     : 'wavatar',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
